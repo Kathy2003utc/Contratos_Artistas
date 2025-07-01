@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Artista</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Sistema - Artista</a>
+    <div>
+      <span class="navbar-text text-white me-3">Hola, {{ usuario.first_name }} {{ usuario.last_name }}</span>
+      <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+    <h1>{{ mensaje }}</h1>
+
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-fluid rounded" />
+      </div>
+      <div class="col-md-8">
+        <h5>Información Personal</h5>
+        <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+        <p><strong>Correo:</strong> {{ usuario.email }}</p>
+        <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+        <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+
+        <h5 class="mt-4">Redes Sociales y Portafolio</h5>
+        {% if usuario.facebook_url %}
+          <p><strong>Facebook:</strong> <a href="{{ usuario.facebook_url }}" target="_blank">{{ usuario.facebook_url }}</a></p>
+        {% endif %}
+        {% if usuario.x_url %}
+          <p><strong>X (Twitter):</strong> <a href="{{ usuario.x_url }}" target="_blank">{{ usuario.x_url }}</a></p>
+        {% endif %}
+        {% if usuario.web_url %}
+          <p><strong>Página Web:</strong> <a href="{{ usuario.web_url }}" target="_blank">{{ usuario.web_url }}</a></p>
+        {% endif %}
+        {% if usuario.portafolio_pdf %}
+          <p><strong>Portafolio PDF:</strong> <a href="{{ usuario.portafolio_pdf.url }}" target="_blank">Descargar</a></p>
+        {% endif %}
+      </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
