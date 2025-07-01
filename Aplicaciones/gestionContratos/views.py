@@ -90,3 +90,48 @@ def dashboard_artista(request):
         # agrega datos específicos para artista, como portafolio, redes sociales, etc.
     }
     return render(request, 'artista/dashboard.html', contexto)
+
+def ver_perfil(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+    return render(request, f"{usuario.rol.lower()}/perfil.html", {'usuario': usuario})
+
+def editar_perfil(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if request.method == 'POST':
+        usuario.first_name = request.POST.get('first_name')
+        usuario.last_name = request.POST.get('last_name')
+        usuario.email = request.POST.get('email')
+        usuario.telefono = request.POST.get('telefono')
+        usuario.direccion = request.POST.get('direccion')
+
+        if request.FILES.get('foto_perfil'):
+            usuario.foto_perfil = request.FILES.get('foto_perfil')
+
+        usuario.save()
+        messages.success(request, "Perfil actualizado correctamente.")
+        return redirect('ver_perfil')
+
+    return render(request, f"{usuario.rol.lower()}/editar_perfil.html", {'usuario': usuario})
+
+def eliminar_perfil(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if request.method == 'POST':
+        usuario.delete()
+        request.session.flush()
+        return redirect('login')
+
+    return render(request, f"{usuario.rol.lower()}/eliminar_perfil.html", {'usuario': usuario})

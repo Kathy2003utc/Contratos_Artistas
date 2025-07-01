@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Mi Perfil - Artista</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Mi Perfil - Artista</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+            <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+            <p><strong>Especialidad:</strong> {{ usuario.especialidad }}</p> <!-- Ejemplo de campo extra -->
+            <p><strong>Redes Sociales:</strong> {{ usuario.redes_sociales }}</p> <!-- Ejemplo -->
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar</a>
+                <button class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+function confirmarEliminacion() {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡Esta acción eliminará tu perfil permanentemente!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'eliminar_perfil' %}";
+            const csrfToken = "{{ csrf_token }}";
+            form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+</script>
+</body>
+</html>

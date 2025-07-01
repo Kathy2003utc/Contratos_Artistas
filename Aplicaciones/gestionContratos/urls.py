@@ -13,4 +13,8 @@ urlpatterns = [
     path('administrador/', lambda request: render(request, 'administrador/dashboard.html'), name='dashboard_administrador'),
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
     path('artista/dashboard/', views.dashboard_artista, name='dashboard_artista'),
+    path('perfil/', views.ver_perfil, name='ver_perfil'),
+    path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
+    path('perfil/eliminar/', views.eliminar_perfil, name='eliminar_perfil'),
+
 ]

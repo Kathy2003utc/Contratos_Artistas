@@ -42,7 +42,8 @@
                                 <p class="text-muted">Inicia sesión para continuar</p>
                             </div>
 
-                            <form method="post" action="{% url 'login' %}">
+                            <form method="post" action="{% url 'iniciar_sesion' %}">
+
                                 {% csrf_token %}
                                 {% if form.errors %}
                                     <div class="alert alert-danger" role="alert">
