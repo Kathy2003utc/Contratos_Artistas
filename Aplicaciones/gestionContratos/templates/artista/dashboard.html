@@ -14,7 +14,7 @@
         Hola, {{ usuario.first_name }} {{ usuario.last_name }}
       </span>
       <a href="{% url 'ver_perfil' %}" class="btn btn-outline-light btn-sm me-2">
-        Ver Mi Perfil
+        Ver mi perfil
       </a>
       <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
         Cerrar sesión
@@ -26,30 +26,37 @@
 <div class="container mt-5">
     <h1>{{ mensaje }}</h1>
 
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-fluid rounded" />
+    <div class="card border-success shadow-sm">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Mi Perfil - Artista</h4>
       </div>
-      <div class="col-md-8">
-        <h5>Información Personal</h5>
-        <p><strong>Usuario:</strong> {{ usuario.username }}</p>
-        <p><strong>Correo:</strong> {{ usuario.email }}</p>
-        <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-        <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+      <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-fluid rounded mb-3" style="max-height: 250px;" />
+            </div>
+            <div class="col-md-8">
+                <h5>Información Personal</h5>
+                <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+                <p><strong>Correo:</strong> {{ usuario.email }}</p>
+                <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
 
-        <h5 class="mt-4">Redes Sociales y Portafolio</h5>
-        {% if usuario.facebook_url %}
-          <p><strong>Facebook:</strong> <a href="{{ usuario.facebook_url }}" target="_blank">{{ usuario.facebook_url }}</a></p>
-        {% endif %}
-        {% if usuario.x_url %}
-          <p><strong>X (Twitter):</strong> <a href="{{ usuario.x_url }}" target="_blank">{{ usuario.x_url }}</a></p>
-        {% endif %}
-        {% if usuario.web_url %}
-          <p><strong>Página Web:</strong> <a href="{{ usuario.web_url }}" target="_blank">{{ usuario.web_url }}</a></p>
-        {% endif %}
-        {% if usuario.portafolio_pdf %}
-          <p><strong>Portafolio PDF:</strong> <a href="{{ usuario.portafolio_pdf.url }}" target="_blank">Descargar</a></p>
-        {% endif %}
+                <h5 class="mt-4">Redes Sociales y Portafolio</h5>
+                {% if usuario.facebook_url %}
+                    <p><strong>Facebook:</strong> <a href="{{ usuario.facebook_url }}" target="_blank">{{ usuario.facebook_url }}</a></p>
+                {% endif %}
+                {% if usuario.x_url %}
+                    <p><strong>X (Twitter):</strong> <a href="{{ usuario.x_url }}" target="_blank">{{ usuario.x_url }}</a></p>
+                {% endif %}
+                {% if usuario.web_url %}
+                    <p><strong>Página Web:</strong> <a href="{{ usuario.web_url }}" target="_blank">{{ usuario.web_url }}</a></p>
+                {% endif %}
+                {% if usuario.portafolio_pdf %}
+                    <p><strong>Portafolio PDF:</strong> <a href="{{ usuario.portafolio_pdf.url }}" target="_blank">Descargar</a></p>
+                {% endif %}
+            </div>
+        </div>
       </div>
     </div>
 </div>

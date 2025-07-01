@@ -9,6 +9,11 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
+        <!-- Botón para regresar al inicio -->
+        <a href="{% url 'dashboard_cliente' %}" class="btn btn-secondary mb-3">
+            ← Volver al Inicio
+        </a>
+
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Mi Perfil</h4>
@@ -40,7 +45,6 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirige a la vista de eliminación con método POST
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = "{% url 'eliminar_perfil' %}";

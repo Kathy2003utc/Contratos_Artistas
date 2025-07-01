@@ -8,28 +8,31 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-light">
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header bg-info text-white">
-            <h4 class="mb-0">Mi Perfil - Artista</h4>
-        </div>
-        <div class="card-body">
-            <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
-            <p><strong>Email:</strong> {{ usuario.email }}</p>
-            <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-            <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
-            <p><strong>Especialidad:</strong> {{ usuario.especialidad }}</p> <!-- Ejemplo de campo extra -->
-            <p><strong>Redes Sociales:</strong> {{ usuario.redes_sociales }}</p> <!-- Ejemplo -->
+    <div class="container mt-5">
+        <!-- Botón para regresar al dashboard del artista -->
+        <a href="{% url 'dashboard_artista' %}" class="btn btn-secondary mb-3">
+            ← Volver al Inicio
+        </a>
 
-            <div class="mt-4 d-flex justify-content-between">
-                <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar</a>
-                <button class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar</button>
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Mi Perfil - Artista</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+                <p><strong>Email:</strong> {{ usuario.email }}</p>
+                <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+                <p><strong>Especialidad:</strong> {{ usuario.especialidad }}</p> <!-- Si tienes este campo -->
+                <p><strong>Redes Sociales:</strong> {{ usuario.redes_sociales }}</p> <!-- Si tienes este campo -->
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar</a>
+                    <button class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
 
 <script>
 function confirmarEliminacion() {
