@@ -19,4 +19,9 @@ urlpatterns = [
     path('perfil/', views.ver_perfil, name='ver_perfil'),
     path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
     path('perfil/eliminar/', views.eliminar_perfil, name='eliminar_perfil'),
+
+    path('cliente/eventos/', views.listar_eventos, name='listar_eventos'),
+    path('cliente/eventos/crear/', views.crear_evento, name='crear_evento'),
+    path('cliente/eventos/editar/<int:id>/', views.editar_evento, name='editar_evento'),
+    path('cliente/eventos/eliminar/<int:id>/', views.eliminar_evento, name='eliminar_evento'),
 ]

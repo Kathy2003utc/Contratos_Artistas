@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
-from .models import Usuario
+from .models import Usuario, Evento
 
 def login(request):
     return render(request, "login/login.html")
@@ -180,3 +180,85 @@ def eliminar_perfil(request):
         return redirect('login')
 
     return render(request, f"{usuario.rol.lower()}/eliminar_perfil.html", {'usuario': usuario})
+
+
+
+# Listar eventos del cliente actual
+def listar_eventos(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = Usuario.objects.get(id=usuario_id)
+    eventos = Evento.objects.filter(cliente=cliente).order_by('fecha')
+    return render(request, 'cliente/eventos/lista_eventos.html', {'eventos': eventos})
+
+# Mostrar formulario para crear evento
+def crear_evento(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
+        fecha = request.POST.get('fecha')
+        ubicacion = request.POST.get('ubicacion')
+
+        cliente = Usuario.objects.get(id=usuario_id)
+        Evento.objects.create(
+            cliente=cliente,
+            titulo=titulo,
+            descripcion=descripcion,
+            fecha=fecha,
+            ubicacion=ubicacion
+        )
+        messages.success(request, "Evento creado exitosamente.")
+        return redirect('listar_eventos')
+
+    return render(request, 'cliente/eventos/crear_evento.html')
+
+# Mostrar formulario para editar un evento
+def editar_evento(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    evento = get_object_or_404(Evento, id=id, cliente_id=usuario_id)
+
+    if request.method == 'POST':
+        evento.titulo = request.POST.get('titulo')
+        evento.descripcion = request.POST.get('descripcion')
+        evento.fecha = request.POST.get('fecha')
+        evento.ubicacion = request.POST.get('ubicacion')
+        evento.save()
+        messages.success(request, "Evento actualizado correctamente.")
+        return redirect('listar_eventos')
+
+    return render(request, 'cliente/eventos/editar_evento.html', {'evento': evento})
+
+# Eliminar evento
+def eliminar_evento(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    evento = get_object_or_404(Evento, id=id, cliente_id=usuario_id)
+    evento.delete()
+    messages.success(request, "Evento eliminado correctamente.")
+    return redirect('listar_eventos')
+
+def eventos_artista(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if usuario.rol != 'Artista':
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('dashboard_artista')
+
+    eventos = Evento.objects.all()
+
+    return render(request, 'artista/eventos/lista_eventos.html', {'eventos': eventos})
