@@ -18,88 +18,50 @@
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="first_name" class="form-label">Nombre:</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="first_name"
-                        name="first_name"
-                        value="{{ usuario.first_name }}"
-                        required
-                    />
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" required/>
                 </div>
                 <div class="mb-3">
                     <label for="last_name" class="form-label">Apellido:</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="last_name"
-                        name="last_name"
-                        value="{{ usuario.last_name }}"
-                        required
-                    />
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" required/>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
-                    <input
-                        type="email"
-                        class="form-control"
-                        id="email"
-                        name="email"
-                        value="{{ usuario.email }}"
-                        required
-                    />
+                    <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required/>
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Teléfono:</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="telefono"
-                        name="telefono"
-                        value="{{ usuario.telefono }}"
-                    />
+                    <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}"/>
                 </div>
                 <div class="mb-3">
                     <label for="direccion" class="form-label">Dirección:</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="direccion"
-                        name="direccion"
-                        value="{{ usuario.direccion }}"
-                    />
+                    <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}"/>
                 </div>
                 <div class="mb-3">
-                    <label for="especialidad" class="form-label">Especialidad:</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="especialidad"
-                        name="especialidad"
-                        value="{{ usuario.especialidad }}"
-                    />
+                    <label for="facebook_url" class="form-label">Facebook:</label>
+                    <input type="url" class="form-control" id="facebook_url" name="facebook_url" value="{{ usuario.facebook_url }}" placeholder="https://facebook.com/usuario"/>
                 </div>
                 <div class="mb-3">
-                    <label for="redes_sociales" class="form-label">Redes Sociales:</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="redes_sociales"
-                        name="redes_sociales"
-                        value="{{ usuario.redes_sociales }}"
-                        placeholder="Ejemplo: Instagram, Facebook, etc."
-                    />
+                    <label for="x_url" class="form-label">X (Twitter):</label>
+                    <input type="url" class="form-control" id="x_url" name="x_url" value="{{ usuario.x_url }}" placeholder="https://x.com/usuario"/>
+                </div>
+                <div class="mb-3">
+                    <label for="web_url" class="form-label">Página Web:</label>
+                    <input type="url" class="form-control" id="web_url" name="web_url" value="{{ usuario.web_url }}" placeholder="https://tusitio.com"/>
+                </div>
+                <div class="mb-3">
+                    <label for="portafolio_pdf" class="form-label">Portafolio PDF:</label>
+                    <input type="file" class="form-control" id="portafolio_pdf" name="portafolio_pdf"/>
+                    {% if usuario.portafolio_pdf %}
+                        <p class="mt-2">
+                            <a href="{{ usuario.portafolio_pdf.url }}" target="_blank">Ver archivo actual</a>
+                        </p>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="foto_perfil" class="form-label">Foto de Perfil:</label>
-                    <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" />
+                    <input type="file" class="form-control" id="foto_perfil" name="foto_perfil"/>
                     {% if usuario.foto_perfil %}
-                    <img
-                        src="{{ usuario.foto_perfil.url }}"
-                        alt="Foto de perfil"
-                        class="img-thumbnail mt-2"
-                        style="max-width: 150px;"
-                    />
+                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-thumbnail mt-2" style="max-width: 150px;"/>
                     {% endif %}
                 </div>
 

@@ -35,12 +35,11 @@
             <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
             <div class="col-lg-7">
                 <div class="p-5">
-                    <h1 class="h4 text-center text-primary mb-4">¡Crear una cuenta!</h1>
+                    <h1 class="h4 text-center text-primary mb-4">Registrate</h1>
 
                     <form class="row g-3" action="/registrarUsuario/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <!-- Campos comunes -->
                         <div class="col-md-6">
                             <input type="text" name="username" class="form-control" placeholder="Usuario" required>
                         </div>
@@ -63,7 +62,6 @@
                             <textarea name="direccion" class="form-control" placeholder="Dirección" required></textarea>
                         </div>
 
-                        <!-- Rol -->
                         <div class="col-12">
                             <label for="rol">Selecciona tu rol:</label>
                             <select class="form-select" name="rol" id="rol" required>
@@ -73,17 +71,16 @@
                             </select>
                         </div>
 
-                        <!-- Campos extras para Artista -->
                         <div id="campos-artista" style="display: none;">
                             <div class="col-12 mt-3">
                                 <label>Portafolio (PDF):</label>
-                                <input type="file" name="portafolio_pdf" class="form-control" accept="application/pdf">
+                                <input type="file" name="portafolio_pdf" class="form-control" accept="application/pdf"> <br>
                             </div>
                             <div class="col-md-6">
-                                <input type="url" name="facebook_url" class="form-control" placeholder="URL de Facebook">
+                                <input type="url" name="facebook_url" class="form-control" placeholder="URL de Facebook"><br>
                             </div>
                             <div class="col-md-6">
-                                <input type="url" name="x_url" class="form-control" placeholder="URL de X (Twitter)">
+                                <input type="url" name="x_url" class="form-control" placeholder="URL de X (Twitter)"><br>
                             </div>
                             <div class="col-12">
                                 <input type="url" name="web_url" class="form-control" placeholder="URL de página web">

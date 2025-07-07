@@ -18,67 +18,29 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="first_name" class="form-label">Nombre:</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="first_name"
-                            name="first_name"
-                            value="{{ usuario.first_name }}"
-                            required
-                        />
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" required/>
                     </div>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Apellido:</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="last_name"
-                            name="last_name"
-                            value="{{ usuario.last_name }}"
-                            required
-                        />
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" required/>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email:</label>
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            name="email"
-                            value="{{ usuario.email }}"
-                            required
-                        />
+                        <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required/>
                     </div>
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono:</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="telefono"
-                            name="telefono"
-                            value="{{ usuario.telefono }}"
-                        />
+                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}"/>
                     </div>
                     <div class="mb-3">
                         <label for="direccion" class="form-label">Dirección:</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="direccion"
-                            name="direccion"
-                            value="{{ usuario.direccion }}"
-                        />
+                        <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}"/>
                     </div>
                     <div class="mb-3">
                         <label for="foto_perfil" class="form-label">Foto de Perfil:</label>
                         <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" />
                         {% if usuario.foto_perfil %}
-                        <img
-                            src="{{ usuario.foto_perfil.url }}"
-                            alt="Foto de perfil"
-                            class="img-thumbnail mt-2"
-                            style="max-width: 150px;"
-                        />
+                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-thumbnail mt-2" style="max-width: 150px;"/>
                         {% endif %}
                     </div>
                     <button type="submit" class="btn btn-success">Guardar Cambios</button>
