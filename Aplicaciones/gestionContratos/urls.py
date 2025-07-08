@@ -12,7 +12,7 @@ urlpatterns = [
     path('registro/', views.registrarUsuario, name='registro'),  
     path('registrarUsuario/', views.registrarUsuario, name='registrar_usuario'),
 
-    path('administrador/', lambda request: render(request, 'administrador/dashboard.html'), name='dashboard_administrador'),
+    path('administrador/', views.dashboard_administrador, name='dashboard_administrador'),
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
     path('artista/dashboard/', views.dashboard_artista, name='dashboard_artista'),
 
@@ -24,4 +24,7 @@ urlpatterns = [
     path('cliente/eventos/crear/', views.crear_evento, name='crear_evento'),
     path('cliente/eventos/editar/<int:id>/', views.editar_evento, name='editar_evento'),
     path('cliente/eventos/eliminar/<int:id>/', views.eliminar_evento, name='eliminar_evento'),
+
+    path('artista/eventos/', views.eventos_artista, name='eventos_artista'),
+
 ]
