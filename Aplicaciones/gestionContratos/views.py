@@ -126,6 +126,24 @@ def dashboard_artista(request):
     }
     return render(request, 'artista/dashboard.html', contexto)
 
+def dashboard_administrador(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if usuario.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para acceder al panel de administrador.")
+        return redirect('login')
+
+    contexto = {
+        'usuario': usuario,
+        'mensaje': 'Bienvenido al panel del administrador'
+    }
+    return render(request, 'administrador/dashboard.html', contexto)
+
+
 def ver_perfil(request):
     usuario_id = request.session.get('usuario_id')
     if not usuario_id:
@@ -262,3 +280,22 @@ def eventos_artista(request):
     eventos = Evento.objects.all()
 
     return render(request, 'artista/eventos/lista_eventos.html', {'eventos': eventos})
+
+def listar_eventos_admin(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if usuario.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    eventos = Evento.objects.all().order_by('-fecha')
+
+    return render(request, 'administrador/eventos/lista_eventos.html', {
+        'usuario': usuario,
+        'eventos': eventos,
+    })
+

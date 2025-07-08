@@ -8,7 +8,6 @@ urlpatterns = [
     path('iniciarSesion/', views.iniciarSesion, name='iniciar_sesion'),
     path('logout/', views.cerrarSesion, name='logout'),
 
-    # Cambié views.registro por views.registrarUsuario
     path('registro/', views.registrarUsuario, name='registro'),  
     path('registrarUsuario/', views.registrarUsuario, name='registrar_usuario'),
 
@@ -26,5 +25,7 @@ urlpatterns = [
     path('cliente/eventos/eliminar/<int:id>/', views.eliminar_evento, name='eliminar_evento'),
 
     path('artista/eventos/', views.eventos_artista, name='eventos_artista'),
+
+    path('administrador/eventos/', views.listar_eventos_admin, name='eventos_admin'),
 
 ]
