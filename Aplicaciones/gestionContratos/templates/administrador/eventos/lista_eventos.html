@@ -37,7 +37,7 @@
         {% for evento in eventos %}
         <tr>
           <td>{{ evento.titulo }}</td>
-          <td>{{ evento.cliente.username }}</td>
+          <td>{{ evento.cliente.first_name }} {{ evento.cliente.last_name }}</td>
           <td>{{ evento.fecha }}</td>
           <td>{{ evento.ubicacion }}</td>
           <td>{{ evento.descripcion }}</td>

@@ -36,6 +36,7 @@
         <thead class="table-primary">
             <tr>
                 <th>ID</th>
+                <th>CLIENTE</th>
                 <th>TÍTULO</th>
                 <th>DESCRIPCIÓN</th>
                 <th>FECHA</th>
@@ -46,6 +47,7 @@
             {% for evento in eventos %}
             <tr>
                 <td>{{ evento.id }}</td>
+                <td>{{ evento.cliente.first_name }} {{ evento.cliente.last_name }}</td>
                 <td>{{ evento.titulo }}</td>
                 <td>{{ evento.descripcion|truncatechars:40 }}</td>
                 <td>{{ evento.fecha|date:"d/m/Y" }}</td>

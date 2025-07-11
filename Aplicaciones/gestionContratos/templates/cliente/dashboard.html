@@ -21,6 +21,12 @@
         </li>
       </ul>
 
+       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'listar_contratos' %}">Mis Contratos</a>
+        </li>
+      </ul>
+
       <div class="d-flex align-items-center">
         <span class="navbar-text text-white me-3">
           Hola, {{ usuario.first_name }} {{ usuario.last_name }}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
-from .models import Usuario, Evento
+from .models import Usuario, Evento, Contrato
 
 def login(request):
     return render(request, "login/login.html")
@@ -208,7 +208,7 @@ def listar_eventos(request):
         return redirect('login')
 
     cliente = Usuario.objects.get(id=usuario_id)
-    eventos = Evento.objects.filter(cliente=cliente).order_by('fecha')
+    eventos = Evento.objects.filter(cliente=cliente).order_by('id')
     return render(request, 'cliente/eventos/lista_eventos.html', {'eventos': eventos})
 
 # Mostrar formulario para crear evento
@@ -292,10 +292,154 @@ def listar_eventos_admin(request):
         messages.error(request, "No tienes permisos para acceder a esta sección.")
         return redirect('login')
 
-    eventos = Evento.objects.all().order_by('-fecha')
+    eventos = Evento.objects.all().order_by('id')
 
     return render(request, 'administrador/eventos/lista_eventos.html', {
         'usuario': usuario,
         'eventos': eventos,
     })
 
+
+def listar_contratos_cliente(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+    contratos = Contrato.objects.filter(evento__cliente=cliente).order_by('id')
+
+    return render(request, 'cliente/contratos/lista_contratos.html', {
+        'usuario': cliente,
+        'contratos': contratos
+    })
+
+def crear_contrato_cliente(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+
+    if request.method == 'POST':
+        evento_id = request.POST.get('evento')
+        artista_id = request.POST.get('artista')
+
+        evento = get_object_or_404(Evento, id=evento_id, cliente=cliente)
+        artista = get_object_or_404(Usuario, id=artista_id, rol='Artista')
+
+        Contrato.objects.create(evento=evento, artista=artista, estado='Pendiente')
+        messages.success(request, "Contrato creado exitosamente.")
+        return redirect('listar_contratos')
+
+    eventos = Evento.objects.filter(cliente=cliente)
+    artistas = Usuario.objects.filter(rol='Artista')
+
+    return render(request, 'cliente/contratos/crear_contrato.html', {
+        'eventos': eventos,
+        'artistas': artistas
+    })
+
+def editar_contrato_cliente(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+    contrato = get_object_or_404(Contrato, id=id, evento__cliente=cliente)
+
+    if request.method == 'POST':
+        evento_id = request.POST.get('evento')
+        artista_id = request.POST.get('artista')
+
+        contrato.evento = get_object_or_404(Evento, id=evento_id, cliente=cliente)
+        contrato.artista = get_object_or_404(Usuario, id=artista_id, rol='Artista')
+        contrato.save()
+
+        messages.success(request, "Contrato actualizado correctamente.")
+        return redirect('listar_contratos')
+
+    eventos = Evento.objects.filter(cliente=cliente)
+    artistas = Usuario.objects.filter(rol='Artista')
+
+    return render(request, 'cliente/contratos/editar_contrato.html', {
+        'contrato': contrato,
+        'eventos': eventos,
+        'artistas': artistas
+    })
+
+def eliminar_contrato_cliente(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+    contrato = get_object_or_404(Contrato, id=id, evento__cliente=cliente)
+
+    if request.method == 'POST':
+        contrato.delete()
+        messages.success(request, "Contrato eliminado correctamente.")
+    else:
+        messages.error(request, "Método no permitido para eliminar contrato.")
+
+    return redirect('listar_contratos')
+
+def listar_contratos_artista(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    artista = get_object_or_404(Usuario, id=usuario_id, rol='Artista')
+    contratos = Contrato.objects.filter(artista=artista).order_by('id')
+
+    return render(request, 'artista/contratos/lista_contratos.html', {
+        'usuario': artista,
+        'contratos': contratos,
+    })
+
+def editar_estado_contrato_artista(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    artista = get_object_or_404(Usuario, id=usuario_id, rol='Artista')
+    contrato = get_object_or_404(Contrato, id=id, artista=artista)
+
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado')
+        if nuevo_estado in ['Pendiente', 'Aceptado', 'Rechazado']:
+            contrato.estado = nuevo_estado
+            contrato.save()
+            messages.success(request, "Estado del contrato actualizado correctamente.")
+            return redirect('contratos_artista')  # Ajusta la url según tus urls.py
+        else:
+            messages.error(request, "Estado inválido.")
+
+    return render(request, 'artista/contratos/editar_contrato.html', {
+        'usuario': artista,
+        'contrato': contrato
+    })
+
+def accion_contrato_artista(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    artista = get_object_or_404(Usuario, id=usuario_id, rol='Artista')
+    contrato = get_object_or_404(Contrato, id=id, artista=artista)
+
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+
+        if accion == 'aceptar':
+            contrato.estado = 'Aceptado'
+        elif accion == 'rechazar':
+            contrato.estado = 'Rechazado'
+        else:
+            messages.error(request, "Acción no válida.")
+            return redirect('contratos_artista')
+
+        contrato.save()
+        messages.success(request, f"Contrato {accion}do exitosamente.")
+        return redirect('contratos_artista')
+
+    return redirect('contratos_artista')
