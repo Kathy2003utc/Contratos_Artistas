@@ -1,46 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <title>Dashboard Cliente</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Sistema - Cliente</a>
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCliente" aria-controls="navbarCliente" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarCliente">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'listar_eventos' %}">Mis Eventos</a>
-        </li>
-      </ul>
-
-       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'listar_contratos' %}">Mis Contratos</a>
-        </li>
-      </ul>
-
-      <div class="d-flex align-items-center">
-        <span class="navbar-text text-white me-3">
-          Hola, {{ usuario.first_name }} {{ usuario.last_name }}
-        </span>
-        <a href="{% url 'ver_perfil' %}" class="btn btn-outline-light btn-sm me-2">
-          Ver mi perfil
-        </a>
-        <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
-          Cerrar sesión
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+{% block contenido %}
+<br><br><br>
 
 <div class="container mt-5">
     <h1>{{ mensaje }}</h1>
@@ -60,6 +22,5 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<br><br><br>
+{% endblock %}

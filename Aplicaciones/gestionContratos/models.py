@@ -59,6 +59,10 @@ class Contrato(models.Model):
     artista = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 'Artista'})
     estado = models.CharField(max_length=20, choices=[('Pendiente', 'Pendiente'), ('Aceptado', 'Aceptado'), ('Rechazado', 'Rechazado')], default='Pendiente')
     fecha_contrato = models.DateField(auto_now_add=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_fin = models.DateField(null=True, blank=True)
+    costo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    observaciones = models.TextField(null=True, blank=True) 
 
     def __str__(self):
         return f"Contrato de {self.artista.username} para {self.evento.titulo}"
