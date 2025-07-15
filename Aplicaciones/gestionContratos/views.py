@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
-from .models import Usuario, Evento, Contrato
+from .models import Usuario, Evento, Contrato, Pago
 
 def login(request):
     return render(request, "login/login.html")
@@ -359,6 +359,10 @@ def editar_contrato_cliente(request, id):
     cliente  = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
     contrato = get_object_or_404(Contrato, id=id, evento__cliente=cliente)
 
+    if contrato.estado == 'Aceptado':
+        messages.error(request, "No puedes editar un contrato que ya fue aceptado por el artista.")
+        return redirect('listar_contratos')
+
     if request.method == 'POST':
         evento_id     = request.POST.get('evento')
         artista_id    = request.POST.get('artista')
@@ -395,13 +399,19 @@ def eliminar_contrato_cliente(request, id):
     cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
     contrato = get_object_or_404(Contrato, id=id, evento__cliente=cliente)
 
+    # Bloquear eliminación si contrato aceptado
+    if contrato.estado == 'Aceptado':
+        messages.error(request, "No puedes eliminar un contrato que ya fue aceptado por el artista.")
+        return redirect('listar_contratos')
+
     if request.method == 'POST':
         contrato.delete()
         messages.success(request, "Contrato eliminado correctamente.")
+        return redirect('listar_contratos')
     else:
         messages.error(request, "Método no permitido para eliminar contrato.")
+        return redirect('listar_contratos')
 
-    return redirect('listar_contratos')
 
 def listar_contratos_artista(request):
     usuario_id = request.session.get('usuario_id')
@@ -463,3 +473,50 @@ def accion_contrato_artista(request, id):
         return redirect('contratos_artista')
 
     return redirect('contratos_artista')
+
+def registrar_pago(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+    contratos_aceptados = Contrato.objects.filter(evento__cliente=cliente, estado='Aceptado')
+
+    if request.method == 'POST':
+        contrato_id  = request.POST.get('contrato')
+        comprobante  = request.FILES.get('comprobante_imagen')
+
+        # 👉 El monto llega readonly, pero por seguridad tomamos el costo directamente del contrato
+        contrato = get_object_or_404(Contrato, id=contrato_id, evento__cliente=cliente, estado='Aceptado')
+        monto    = contrato.costo  # ignoramos el valor manipulado en el POST
+
+        if not comprobante:
+            messages.error(request, "El comprobante es obligatorio.")
+            return redirect('registrar_pago')
+
+        Pago.objects.create(
+            contrato            = contrato,
+            cliente             = cliente,
+            artista             = contrato.artista,
+            monto               = monto,
+            comprobante_imagen  = comprobante
+        )
+        messages.success(request, "Pago registrado exitosamente.")
+        return redirect('listar_pagos')
+
+    return render(request, 'cliente/pagos/registrar_pago.html', {
+        'contratos': contratos_aceptados
+    })
+
+
+def listar_pagos_cliente(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+    pagos = Pago.objects.filter(cliente=cliente).order_by('-fecha_pago')
+
+    return render(request, 'cliente/pagos/lista_pagos.html', {
+        'pagos': pagos
+    })

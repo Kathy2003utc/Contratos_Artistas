@@ -1,0 +1,58 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<div class="container">
+    <h2 class="mb-4">Registrar Pago</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Selección del contrato aceptado -->
+        <div class="mb-3">
+            <label for="contrato">Contrato:</label>
+            <select name="contrato" id="contrato" class="form-control" required onchange="autocompletarMonto()">
+                <option value="">-- Selecciona un contrato --</option>
+                {% for c in contratos %}
+                    <option value="{{ c.id }}" data-costo="{{ c.costo|floatformat:2 }}" data-artista="{{ c.artista.get_full_name }}">
+                        Evento: {{ c.evento.titulo }} – Artista: {{ c.artista.get_full_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Artista asociado (solo lectura) -->
+        <div class="mb-3">
+            <label>Artista:</label>
+            <input type="text" id="artista_nombre" class="form-control" readonly>
+        </div>
+
+        <!-- Monto autocompletado y solo lectura -->
+        <div class="mb-3">
+            <label>Monto:</label>
+            <input type="number" name="monto" id="monto" step="0.01" class="form-control" readonly required>
+        </div>
+
+        <!-- Comprobante obligatorio -->
+        <div class="mb-3">
+            <label>Comprobante de pago (obligatorio):</label>
+            <input type="file" name="comprobante_imagen" accept="image/*" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrar Pago</button>
+        <a href="{% url 'listar_pagos' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<script>
+function autocompletarMonto() {
+    const sel      = document.getElementById('contrato');
+    const artista  = sel.options[sel.selectedIndex].getAttribute('data-artista') || '';
+    const costo    = sel.options[sel.selectedIndex].getAttribute('data-costo')   || '';
+
+    document.getElementById('artista_nombre').value = artista;
+    document.getElementById('monto').value          = costo;
+}
+</script>
+
+{% endblock %}

@@ -45,5 +45,8 @@ urlpatterns = [
     path('artista/contratos/editar/<int:id>/', views.editar_estado_contrato_artista, name='editar_estado_contrato_artista'),
     path('artista/contratos/accion/<int:id>/', views.accion_contrato_artista, name='accion_contrato_artista'),
 
+    # Cliente - Pagos
+    path('cliente/pagos/', views.listar_pagos_cliente, name='listar_pagos'),
+    path('cliente/pagos/registrar/', views.registrar_pago, name='registrar_pago'),
 
 ]

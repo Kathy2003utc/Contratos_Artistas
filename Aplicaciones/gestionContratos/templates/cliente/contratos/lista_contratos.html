@@ -48,11 +48,17 @@
                 <td>${{ contrato.costo|floatformat:2 }}</td>
                 <td>{{ contrato.observaciones|default:"—" }}</td>
                 <td>
-                    <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-sm btn-outline-primary me-1">Editar</a>
-                    <form method="post" action="{% url 'eliminar_contrato' contrato.id %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminacion(event);">Eliminar</button>
-                    </form>
+                    {% if contrato.estado == 'Pendiente' %}
+                        <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                    {% endif %}
+
+                    {% if contrato.estado == 'Pendiente' %}
+                        <form method="post" action="{% url 'eliminar_contrato' contrato.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminacion(event);">Eliminar</button>
+                        </form>
+                    {% endif %}
+
                 </td>
             </tr>
             {% empty %}
