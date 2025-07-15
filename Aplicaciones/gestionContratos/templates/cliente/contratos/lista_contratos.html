@@ -20,6 +20,10 @@
                 <th>Artista</th>
                 <th>Estado</th>
                 <th>Fecha del Contrato</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Costo</th>
+                <th>Observaciones</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -39,9 +43,12 @@
                     {% endif %}
                 </td>
                 <td>{{ contrato.fecha_contrato|date:"d/m/Y" }}</td>
+                <td>{{ contrato.fecha_inicio|date:"d/m/Y" }}</td>
+                <td>{{ contrato.fecha_fin|date:"d/m/Y" }}</td>
+                <td>${{ contrato.costo|floatformat:2 }}</td>
+                <td>{{ contrato.observaciones|default:"—" }}</td>
                 <td>
                     <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-sm btn-outline-primary me-1">Editar</a>
-
                     <form method="post" action="{% url 'eliminar_contrato' contrato.id %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminacion(event);">Eliminar</button>
@@ -50,11 +57,12 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" class="text-center">No hay contratos registrados.</td>
+                <td colspan="10" class="text-center">No hay contratos registrados.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
 </div>
 
 <script>

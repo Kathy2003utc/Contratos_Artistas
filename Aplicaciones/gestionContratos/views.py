@@ -321,17 +321,29 @@ def crear_contrato_cliente(request):
     cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
 
     if request.method == 'POST':
-        evento_id = request.POST.get('evento')
-        artista_id = request.POST.get('artista')
+        evento_id        = request.POST.get('evento')
+        artista_id       = request.POST.get('artista')
+        fecha_inicio     = request.POST.get('fecha_inicio')  or None
+        fecha_fin        = request.POST.get('fecha_fin')     or None
+        costo            = request.POST.get('costo')         or None
+        observaciones    = request.POST.get('observaciones')
 
-        evento = get_object_or_404(Evento, id=evento_id, cliente=cliente)
+        evento  = get_object_or_404(Evento, id=evento_id,  cliente=cliente)
         artista = get_object_or_404(Usuario, id=artista_id, rol='Artista')
 
-        Contrato.objects.create(evento=evento, artista=artista, estado='Pendiente')
+        Contrato.objects.create(
+            evento         = evento,
+            artista        = artista,
+            estado         = 'Pendiente',
+            fecha_inicio   = fecha_inicio,
+            fecha_fin      = fecha_fin,
+            costo          = costo if costo not in ('', None) else None,
+            observaciones  = observaciones
+        )
         messages.success(request, "Contrato creado exitosamente.")
         return redirect('listar_contratos')
 
-    eventos = Evento.objects.filter(cliente=cliente)
+    eventos  = Evento.objects.filter(cliente=cliente)
     artistas = Usuario.objects.filter(rol='Artista')
 
     return render(request, 'cliente/contratos/crear_contrato.html', {
@@ -344,21 +356,29 @@ def editar_contrato_cliente(request, id):
     if not usuario_id:
         return redirect('login')
 
-    cliente = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
+    cliente  = get_object_or_404(Usuario, id=usuario_id, rol='Cliente')
     contrato = get_object_or_404(Contrato, id=id, evento__cliente=cliente)
 
     if request.method == 'POST':
-        evento_id = request.POST.get('evento')
-        artista_id = request.POST.get('artista')
+        evento_id     = request.POST.get('evento')
+        artista_id    = request.POST.get('artista')
+        fecha_inicio  = request.POST.get('fecha_inicio')  or None
+        fecha_fin     = request.POST.get('fecha_fin')     or None
+        costo         = request.POST.get('costo')         or None
+        observaciones = request.POST.get('observaciones')
 
-        contrato.evento = get_object_or_404(Evento, id=evento_id, cliente=cliente)
-        contrato.artista = get_object_or_404(Usuario, id=artista_id, rol='Artista')
+        contrato.evento        = get_object_or_404(Evento, id=evento_id,  cliente=cliente)
+        contrato.artista       = get_object_or_404(Usuario, id=artista_id, rol='Artista')
+        contrato.fecha_inicio  = fecha_inicio
+        contrato.fecha_fin     = fecha_fin
+        contrato.costo         = costo if costo not in ('', None) else None
+        contrato.observaciones = observaciones
         contrato.save()
 
         messages.success(request, "Contrato actualizado correctamente.")
         return redirect('listar_contratos')
 
-    eventos = Evento.objects.filter(cliente=cliente)
+    eventos  = Evento.objects.filter(cliente=cliente)
     artistas = Usuario.objects.filter(rol='Artista')
 
     return render(request, 'cliente/contratos/editar_contrato.html', {

@@ -22,9 +22,29 @@
             <label for="artista" class="form-label">Artista:</label>
             <select id="artista" name="artista" class="form-select" required>
                 {% for artista in artistas %}
-                    <option value="{{ artista.id }}">{{ artista.username }}</option>
+                    <option value="{{ artista.id }}">{{ artista.first_name }} {{ artista.last_name }}</option>
                 {% endfor %}
             </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="fecha_inicio" class="form-label">Fecha de Inicio:</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="fecha_fin" class="form-label">Fecha de Fin:</label>
+            <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="costo" class="form-label">Costo:</label>
+            <input type="number" id="costo" name="costo" class="form-control" step="0.01" min="0">
+        </div>
+
+        <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones:</label>
+            <textarea id="observaciones" name="observaciones" class="form-control" rows="3"></textarea>
         </div>
 
         <input type="hidden" name="estado" value="Pendiente">
@@ -33,6 +53,7 @@
         <a href="{% url 'listar_contratos' %}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
 </div>
+
 
 <!-- Mostrar opciones de Aceptar o Rechazar solo si el artista está autenticado y es el asignado -->
 {% if contrato and user.id == contrato.artista.id and contrato.estado == 'Pendiente' %}
