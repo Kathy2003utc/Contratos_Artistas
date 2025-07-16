@@ -56,7 +56,7 @@
     {% endif %}
 </div>
 
-<!-- SweetAlert para confirmar eliminación -->
+
 <script>
 function confirmarEliminacion(id) {
     Swal.fire({
@@ -76,16 +76,16 @@ function confirmarEliminacion(id) {
 }
 </script>
 
-<!-- DataTable -->
+
 <script>
-$(document).ready(function() {
-    $('#tbl_pagos').DataTable({
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-        },
-        dom: 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-    });
-});
+  $('#tbl_pagos').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+
 </script>
 {% endblock %}

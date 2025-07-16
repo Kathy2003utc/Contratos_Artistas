@@ -9,7 +9,7 @@
     <hr>
 
     <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
+    <table class="table table-bordered table-striped table-hover" id="tbl_contrato">
         <thead class="table-primary">
             <tr>
                 <th>ID</th>
@@ -129,6 +129,18 @@ document.querySelectorAll('form').forEach(form => {
         confirmarAccion(e, mensaje);
     });
 });
+</script>
+
+<script>
+  $('#tbl_contrato').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+
 </script>
 
 <br><br><br>

@@ -92,15 +92,15 @@ function confirmarEliminacion(e) {
 </script>
 
 <script>
-  $(document).ready(function() {
-      $('#tbl_contrato').DataTable({
-          language: {
-              url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-          },
-          dom: 'Bfrtip',
-          buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-      });
+  $('#tbl_contrato').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
   });
+
 </script>
 
 <br><br><br>
