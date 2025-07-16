@@ -48,5 +48,9 @@ urlpatterns = [
     # Cliente - Pagos
     path('cliente/pagos/', views.listar_pagos_cliente, name='listar_pagos'),
     path('cliente/pagos/registrar/', views.registrar_pago, name='registrar_pago'),
+    path('pagos/<int:id>/editar/', views.editar_pago, name='editar_pago'),
+    path('pagos/<int:id>/eliminar/', views.eliminar_pago, name='eliminar_pago'),
+
+
 
 ]

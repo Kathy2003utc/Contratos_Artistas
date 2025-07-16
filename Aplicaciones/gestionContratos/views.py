@@ -262,6 +262,14 @@ def eliminar_evento(request, id):
         return redirect('login')
 
     evento = get_object_or_404(Evento, id=id, cliente_id=usuario_id)
+
+    # Verificar si hay contratos aceptados asociados al evento
+    contratos_aceptados = Contrato.objects.filter(evento=evento, estado='Aceptado')
+
+    if contratos_aceptados.exists():
+        messages.error(request, "No puedes eliminar este evento porque tiene un contrato aceptado.")
+        return redirect('listar_eventos')
+
     evento.delete()
     messages.success(request, "Evento eliminado correctamente.")
     return redirect('listar_eventos')
@@ -520,3 +528,47 @@ def listar_pagos_cliente(request):
     return render(request, 'cliente/pagos/lista_pagos.html', {
         'pagos': pagos
     })
+
+def editar_pago(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    pago = get_object_or_404(Pago, id=id, cliente_id=usuario_id)
+    contratos_aceptados = Contrato.objects.filter(evento__cliente_id=usuario_id, estado='Aceptado')
+
+    if request.method == 'POST':
+        contrato_id = request.POST.get('contrato')
+        contrato = get_object_or_404(Contrato, id=contrato_id, evento__cliente_id=usuario_id, estado='Aceptado')
+
+        # Actualiza campos
+        pago.contrato = contrato
+        pago.artista = contrato.artista
+        pago.monto = contrato.costo
+
+        if 'comprobante_imagen' in request.FILES:
+            pago.comprobante_imagen = request.FILES['comprobante_imagen']
+
+        pago.save()
+        messages.success(request, "Pago actualizado correctamente.")
+        return redirect('listar_pagos')
+
+    return render(request, 'cliente/pagos/editar_pago.html', {
+        'pago': pago,
+        'contratos': contratos_aceptados
+    })
+
+def eliminar_pago(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    pago = get_object_or_404(Pago, id=id, cliente_id=usuario_id)
+
+    if request.method == 'POST':
+        pago.delete()
+        messages.success(request, "Pago eliminado correctamente.")
+        return redirect('listar_pagos')
+
+    messages.error(request, "Acción no permitida.")
+    return redirect('listar_pagos')
