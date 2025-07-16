@@ -1,0 +1,55 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<body class="bg-light">
+    <div class="container mt-5">
+
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Mi Perfil</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+                <p><strong>Email:</strong> {{ usuario.email }}</p>
+                <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar</a>
+                    <button class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¡Esta acción eliminará tu perfil permanentemente!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{% url 'eliminar_perfil' %}";
+                    const csrfToken = "{{ csrf_token }}";
+                    form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">`;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
+</body>
+
+<br><br><br>
+{% endblock %}

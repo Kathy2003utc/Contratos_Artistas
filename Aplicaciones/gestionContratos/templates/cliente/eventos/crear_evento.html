@@ -1,0 +1,40 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+{% block contenido %} 
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Crear Nuevo Evento</h1>
+    <hr>
+
+    <form method="post" class="mx-auto" style="max-width: 600px;">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título del evento:</label>
+            <input type="text" id="titulo" name="titulo" class="form-control" required placeholder="Ingrese el título" />
+        </div>
+
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required placeholder="Descripción detallada"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="ubicacion" class="form-label">Ubicación:</label>
+            <input type="text" id="ubicacion" name="ubicacion" class="form-control" required placeholder="Lugar del evento" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="{% url 'listar_eventos' %}" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>
+
+
+<br><br><br>
+{% endblock %}
+

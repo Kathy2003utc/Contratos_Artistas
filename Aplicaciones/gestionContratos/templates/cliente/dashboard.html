@@ -1,0 +1,26 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1>{{ mensaje }}</h1>
+
+    <div class="card border-success">
+      <div class="card-body">
+        <h5 class="card-title text-success">¿Qué puedes hacer como cliente?</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">🎤 <strong>Contratar artistas</strong> para tus eventos según tus preferencias.</li>
+          <li class="list-group-item">📅 <strong>Registrar y gestionar tus eventos</strong> personales o empresariales.</li>
+          <li class="list-group-item">📄 <strong>Revisar los contratos realizados</strong> con los artistas.</li>
+          <li class="list-group-item">✏️ <strong>Editar tu perfil</strong> y mantener tu información actualizada.</li>
+          <li class="list-group-item">🔒 <strong>Cerrar sesión</strong> de forma segura.</li>
+        </ul>
+      </div>
+    </div>
+
+</div>
+
+<br><br><br>
+{% endblock %}
