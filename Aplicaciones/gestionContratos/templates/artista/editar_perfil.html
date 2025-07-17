@@ -71,5 +71,25 @@
 
 </body>
 
+<script>
+    $("#portafolio_pdf").fileinput({
+        language: "es",
+        allowedFileExtensions: ["pdf"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
+
+<script>
+    $("#foto_perfil").fileinput({
+        language: "es",
+        allowedFileExtensions: ["png", "jpg", "jpeg"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
+
 <br><br><br>
 {% endblock %}
