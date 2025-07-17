@@ -12,6 +12,7 @@
         <a href="{% url 'crear_contrato' %}" class="btn btn-success">Nuevo Contrato</a>
     </div>
 
+
     <table class="table table-bordered table-striped table-hover" id="tbl_contrato">
         <thead class="table-primary">
             <tr>
@@ -24,6 +25,7 @@
                 <th>Fin</th>
                 <th>Costo</th>
                 <th>Observaciones</th>
+                <th>Contrato PDF</th> 
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -47,27 +49,44 @@
                 <td>{{ contrato.fecha_fin|date:"d/m/Y" }}</td>
                 <td>${{ contrato.costo|floatformat:2 }}</td>
                 <td>{{ contrato.observaciones|default:"—" }}</td>
+                
+                <td>
+                    {% if contrato.pdf %}
+                        <iframe 
+                            src="{{ contrato.pdf.url }}" 
+                            width="300" 
+                            height="250" 
+                            style="border: 1px solid #ccc;"
+                            title="Vista previa PDF"
+                            type="application/pdf">
+                        </iframe>
+                        <br><small>{{ contrato.pdf.name|slice:"16:" }}</small><br>
+                        <a href="{{ contrato.pdf.url }}" class="btn btn-sm btn-primary mt-1" download>Descargar</a>
+                        <a href="{{ contrato.pdf.url }}" class="btn btn-sm btn-secondary mt-1" target="_blank">Ver en pestaña</a>
+                    {% else %}
+                        Ninguno
+                    {% endif %}
+                </td>
+
                 <td>
                     {% if contrato.estado == 'Pendiente' %}
                         <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-sm btn-outline-primary me-1">Editar</a>
-                    {% endif %}
 
-                    {% if contrato.estado == 'Pendiente' %}
                         <form method="post" action="{% url 'eliminar_contrato' contrato.id %}" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminacion(event);">Eliminar</button>
                         </form>
                     {% endif %}
-
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="10" class="text-center">No hay contratos registrados.</td>
+                <td colspan="11" class="text-center">No hay contratos registrados.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
 
 </div>
 

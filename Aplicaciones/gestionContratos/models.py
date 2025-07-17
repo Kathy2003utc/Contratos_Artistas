@@ -62,7 +62,10 @@ class Contrato(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    pdf = models.FileField(upload_to='contratos/pdfs/', null=True, blank=True)
+
     observaciones = models.TextField(null=True, blank=True) 
+
 
     def __str__(self):
         return f"Contrato de {self.artista.username} para {self.evento.titulo}"

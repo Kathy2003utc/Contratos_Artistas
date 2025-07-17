@@ -334,6 +334,7 @@ def crear_contrato_cliente(request):
         fecha_inicio     = request.POST.get('fecha_inicio')  or None
         fecha_fin        = request.POST.get('fecha_fin')     or None
         costo            = request.POST.get('costo')         or None
+        pdf = request.FILES.get('pdf')
         observaciones    = request.POST.get('observaciones')
 
         evento  = get_object_or_404(Evento, id=evento_id,  cliente=cliente)
@@ -346,6 +347,7 @@ def crear_contrato_cliente(request):
             fecha_inicio   = fecha_inicio,
             fecha_fin      = fecha_fin,
             costo          = costo if costo not in ('', None) else None,
+            pdf=pdf,
             observaciones  = observaciones
         )
         messages.success(request, "Contrato creado exitosamente.")
