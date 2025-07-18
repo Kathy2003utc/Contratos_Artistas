@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.db import models
+from django.utils import timezone
+import uuid
 
 # Opciones de roles
 ROL_CHOICES = (
@@ -12,6 +15,7 @@ class Usuario(AbstractUser):
     telefono = models.CharField(max_length=10)
     direccion = models.TextField()
     rol = models.CharField(max_length=20, choices=ROL_CHOICES, default='Cliente')
+    verificado = models.BooleanField(default=False) 
     bloqueado = models.BooleanField(default=False)
     foto_perfil = models.ImageField(upload_to='usuarios/perfil/', null=True, blank=True)
 
@@ -114,3 +118,12 @@ class Pago(models.Model):
 
     class Meta:
         ordering = ['-fecha_pago']
+
+class VerificacionCorreo(models.Model):
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    codigo = models.CharField(max_length=6)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    expirado = models.BooleanField(default=False)
+
+    def esta_expirado(self):
+        return timezone.now() > self.creado_en + timezone.timedelta(minutes=10)  # Código válido por 10 minutos

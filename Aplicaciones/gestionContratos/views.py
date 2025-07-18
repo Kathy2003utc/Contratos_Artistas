@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
 from .models import Usuario, Evento, Contrato, Pago
+from .models import VerificacionCorreo
+from django.core.mail import send_mail
+import random
+from django.conf import settings
 
 def login(request):
     return render(request, "login/login.html")
@@ -21,6 +25,11 @@ def iniciarSesion(request):
             if check_password(password, usuario.password):
                 if usuario.bloqueado:
                     messages.error(request, "Usuario bloqueado.")
+                    return render(request, 'login/login.html')
+
+                # Verificación de correo
+                if not usuario.verificado:
+                    messages.error(request, "Debes verificar tu correo antes de iniciar sesión.")
                     return render(request, 'login/login.html')
 
                 # Guardar datos en sesión
@@ -47,6 +56,10 @@ def iniciarSesion(request):
             return render(request, 'login/login.html')
 
     return render(request, 'login/login.html')
+
+
+def generar_codigo():
+    return str(random.randint(100000, 999999))
 
 def registrarUsuario(request):
     if request.method == 'POST':
@@ -95,10 +108,79 @@ def registrarUsuario(request):
             usuario.foto_perfil = request.FILES['foto_perfil']
 
         usuario.save()
-        messages.success(request, "Registro exitoso. Ya puedes iniciar sesión.")
-        return redirect('login')
+
+        # Crear código de verificación
+        codigo = generar_codigo()
+        VerificacionCorreo.objects.create(usuario=usuario, codigo=codigo)
+
+        # Enviar correo
+        send_mail(
+            subject='Verifica tu correo',
+            message=f'Tu código de verificación es: {codigo}',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[usuario.email],
+            fail_silently=False,
+        )
+
+        try:
+            send_mail(
+                subject='Verifica tu correo',
+                message=f'Tu código de verificación es: {codigo}',
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[usuario.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print("Error enviando correo:", e)  # Esto se verá en la consola
+            messages.error(request, "No se pudo enviar el correo de verificación.")
+            return render(request, 'login/registrarUsuario.html')  # Muestra de nuevo el formulario
+
+        return redirect('verificar_correo', usuario_id=usuario.id)
 
     return render(request, 'login/registrarUsuario.html')
+
+from .models import VerificacionCorreo
+
+def verificarCorreo(request, usuario_id):
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+        try:
+            verificacion = VerificacionCorreo.objects.filter(usuario=usuario, expirado=False).latest('creado_en')
+            if verificacion.codigo == codigo:
+                if verificacion.esta_expirado():
+                    messages.error(request, "El código ha expirado.")
+                else:
+                    usuario.verificado = True
+                    usuario.save()
+                    verificacion.expirado = True
+                    verificacion.save()
+                    messages.success(request, "Correo verificado con éxito.")
+                    return redirect('login')
+            else:
+                messages.error(request, "Código incorrecto.")
+        except VerificacionCorreo.DoesNotExist:
+            messages.error(request, "No se encontró un código válido.")
+
+    return render(request, 'login/verificar_correo.html', {'usuario': usuario})
+
+def reenviar_codigo(request, usuario_id):
+    usuario = Usuario.objects.get(id=usuario_id)
+    codigo = generar_codigo()
+    VerificacionCorreo.objects.create(usuario=usuario, codigo=codigo)
+
+    send_mail(
+        subject='Nuevo código de verificación',
+        message=f'Tu nuevo código es: {codigo}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[usuario.email],
+        fail_silently=False,
+    )
+
+    messages.success(request, "Nuevo código enviado.")
+    return redirect('verificar_correo', usuario_id=usuario.id)
+
 
 def dashboard_cliente(request):
     usuario_id = request.session.get('usuario_id')

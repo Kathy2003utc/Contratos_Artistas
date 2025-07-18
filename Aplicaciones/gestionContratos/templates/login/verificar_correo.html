@@ -1,0 +1,18 @@
+
+<div class="container mt-5">
+    <h3>Verificación de correo</h3>
+    <p>Ingresa el código que te enviamos a tu correo.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Código:</label>
+            <input type="text" name="codigo" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Verificar</button>
+    </form>
+
+    <hr>
+    <a href="{% url 'reenviar_codigo' usuario.id %}" class="btn btn-outline-primary mt-2">Reenviar código</a>
+</div>
+

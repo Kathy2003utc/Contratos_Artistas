@@ -8,6 +8,10 @@ urlpatterns = [
     path('iniciarSesion/', views.iniciarSesion, name='iniciar_sesion'),
     path('logout/', views.cerrarSesion, name='logout'),
 
+    path('verificar-correo/<int:usuario_id>/', views.verificarCorreo, name='verificar_correo'),
+    path('reenviar-codigo/<int:usuario_id>/', views.reenviar_codigo, name='reenviar_codigo'),
+    
+
     # Registro
     path('registro/', views.registrarUsuario, name='registro'),  
     path('registrarUsuario/', views.registrarUsuario, name='registrar_usuario'),
