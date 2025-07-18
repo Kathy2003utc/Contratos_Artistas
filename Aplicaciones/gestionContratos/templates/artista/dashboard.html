@@ -3,45 +3,48 @@
 
 {% block contenido %}
 <br><br><br>
+<!-- Fondo con degradado -->
+<style>
+    body {
+        background: linear-gradient(to right, #f3e5f5, #e8f5e9);
+    }
+</style>
 
-<div class="container mt-5">
-    <h1>{{ mensaje }}</h1>
+<div class="container my-5">
 
-    <div class="card border-success shadow-sm">
-      <div class="card-header bg-success text-white">
-        <h4 class="mb-0">Mi Perfil - Artista</h4>
-      </div>
-      <div class="card-body">
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-fluid rounded mb-3" style="max-height: 250px;" />
-            </div>
-            <div class="col-md-8">
-                <h5>Información Personal</h5>
-                <p><strong>Usuario:</strong> {{ usuario.username }}</p>
-                <p><strong>Correo:</strong> {{ usuario.email }}</p>
-                <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-                <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+    <!-- Encabezado -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">🎶 ¡Hola, {{ user.first_name|default:"Artista" }}!</h1>
+        <p class="lead text-secondary">Bienvenido a tu panel de gestión. Aquí puedes administrar tus presentaciones y perfil.</p>
+    </div>
 
-                <h5 class="mt-4">Redes Sociales y Portafolio</h5>
-                {% if usuario.facebook_url %}
-                    <p><strong>Facebook:</strong> <a href="{{ usuario.facebook_url }}" target="_blank">{{ usuario.facebook_url }}</a></p>
-                {% endif %}
-                {% if usuario.x_url %}
-                    <p><strong>X (Twitter):</strong> <a href="{{ usuario.x_url }}" target="_blank">{{ usuario.x_url }}</a></p>
-                {% endif %}
-                {% if usuario.web_url %}
-                    <p><strong>Página Web:</strong> <a href="{{ usuario.web_url }}" target="_blank">{{ usuario.web_url }}</a></p>
-                {% endif %}
-                {% if usuario.portafolio_pdf %}
-                    <p><strong>Portafolio PDF:</strong> <a href="{{ usuario.portafolio_pdf.url }}" target="_blank">Descargar</a></p>
-                {% endif %}
-            </div>
+    <!-- Tarjeta de acciones -->
+    <div class="card mx-auto shadow-lg border-0" style="max-width: 700px; border-radius: 1rem;">
+        <div class="card-header bg-primary text-white text-center" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <h4 class="mb-0"><i class="bi bi-music-note-beamed"></i> Opciones disponibles para ti</h4>
         </div>
-      </div>
+        <div class="card-body bg-white">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-calendar-event-fill text-primary me-3 fs-4"></i>
+                    <span><strong>Ver eventos asignados:</strong> Consulta fechas, lugares y detalles de tus presentaciones.</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-file-earmark-check-fill text-primary me-3 fs-4"></i>
+                    <span><strong>Revisar contratos:</strong> Visualiza acuerdos realizados con los clientes.</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-person-circle text-primary me-3 fs-4"></i>
+                    <span><strong>Editar tu perfil:</strong> Mantén tu información profesional actualizada.</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-box-arrow-right text-danger me-3 fs-4"></i>
+                    <span><strong>Cerrar sesión:</strong> Sal de forma segura del sistema.</span>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
-
-<br><br><br>
 {% endblock %}
+
 
