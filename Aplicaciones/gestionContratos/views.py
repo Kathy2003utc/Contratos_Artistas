@@ -1,16 +1,26 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
-from .models import Usuario, Evento, Contrato, Pago
+from .models import Usuario, Evento, Contrato, Pago, RegistroSesion
 from .models import VerificacionCorreo
 from django.core.mail import send_mail
 import random
 from django.conf import settings
+from django.utils import timezone
 
 def login(request):
     return render(request, "login/login.html")
 
 def cerrarSesion(request):
+    registro_sesion_id = request.session.get('registro_sesion_id')
+    if registro_sesion_id:
+        try:
+            registro = RegistroSesion.objects.get(id=registro_sesion_id)
+            registro.fecha_logout = timezone.now()
+            registro.save()
+        except RegistroSesion.DoesNotExist:
+            pass
+
     request.session.flush()
     return redirect('login')
 
@@ -27,10 +37,20 @@ def iniciarSesion(request):
                     messages.error(request, "Usuario bloqueado.")
                     return render(request, 'login/login.html')
 
-                # Verificación de correo
                 if not usuario.verificado:
                     messages.error(request, "Debes verificar tu correo antes de iniciar sesión.")
                     return render(request, 'login/login.html')
+
+                # Registrar inicio de sesión
+                user_agent = request.META.get('HTTP_USER_AGENT', '')  # Obtener user agent
+                registro_sesion = RegistroSesion.objects.create(
+                    usuario=usuario,
+                    user_agent=user_agent,
+                    exitoso=True
+                )
+                
+                # Guardar id del registro en sesión para usarlo en logout
+                request.session['registro_sesion_id'] = registro_sesion.id
 
                 # Guardar datos en sesión
                 request.session['usuario_id'] = usuario.id
@@ -656,3 +676,20 @@ def eliminar_pago(request, id):
 
     messages.error(request, "Acción no permitida.")
     return redirect('listar_pagos')
+
+def listar_registros_sesion(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    if usuario.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    registros = RegistroSesion.objects.select_related('usuario').all()
+
+    return render(request, 'administrador/sesiones/lista_sesiones.html', {
+        'registros': registros
+    })

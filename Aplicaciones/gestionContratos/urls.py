@@ -8,6 +8,7 @@ urlpatterns = [
     path('iniciarSesion/', views.iniciarSesion, name='iniciar_sesion'),
     path('logout/', views.cerrarSesion, name='logout'),
 
+    # Verificacion de correo
     path('verificar-correo/<int:usuario_id>/', views.verificarCorreo, name='verificar_correo'),
     path('reenviar-codigo/<int:usuario_id>/', views.reenviar_codigo, name='reenviar_codigo'),
     
@@ -55,6 +56,8 @@ urlpatterns = [
     path('pagos/<int:id>/editar/', views.editar_pago, name='editar_pago'),
     path('pagos/<int:id>/eliminar/', views.eliminar_pago, name='eliminar_pago'),
 
+    #Administrador - Registro de sesiones
+    path('administrador/sesiones/', views.listar_registros_sesion, name='listar_registros_sesion'),
 
 
 ]

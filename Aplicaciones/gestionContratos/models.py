@@ -127,3 +127,41 @@ class VerificacionCorreo(models.Model):
 
     def esta_expirado(self):
         return timezone.now() > self.creado_en + timezone.timedelta(minutes=10)  # Código válido por 10 minutos
+    
+class TerminosCondiciones(models.Model):
+    version = models.CharField(max_length=20, unique=True)  # Ej: "v1.0", "2025-07"
+    texto = models.TextField()
+    fecha_publicacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Términos y Condiciones v{self.version} - {'Activo' if self.activo else 'Inactivo'}"
+
+    class Meta:
+        ordering = ['-fecha_publicacion']
+
+class RegistroSesion(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    fecha_login = models.DateTimeField(auto_now_add=True)
+    fecha_logout = models.DateTimeField(null=True, blank=True)
+    user_agent = models.CharField(max_length=255, null=True, blank=True)
+    exitoso = models.BooleanField(default=True)  # Por si quieres registrar intentos fallidos
+
+    def __str__(self):
+        estado = "cerrada" if self.fecha_logout else "abierta"
+        return f"Sesión {estado} de {self.usuario.username} - {self.fecha_login.strftime('%Y-%m-%d %H:%M:%S')}"
+    
+    class Meta:
+        ordering = ['-fecha_login']
+
+class ActividadUsuario(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    ultima_publicacion = models.DateTimeField(null=True, blank=True)
+    cuenta_desactivada = models.BooleanField(default=False)
+    fecha_desactivacion = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        estado = "Desactivada" if self.cuenta_desactivada else "Activa"
+        return f"Actividad de {self.usuario.username} - {estado}"
+
+    class Meta:
+        ordering = ['-ultima_publicacion']
