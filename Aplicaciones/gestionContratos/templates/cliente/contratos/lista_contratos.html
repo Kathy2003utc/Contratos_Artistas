@@ -70,18 +70,18 @@
 
                 <td>
                     {% if contrato.estado == 'Pendiente' %}
-                        <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-sm btn-outline-primary me-1">Editar</a>
-
+                        <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-outline-warning btn-sm" title="Editar">
+                            <i class="fa fa-pen"></i>
+                        </a>
+                        <br><br>
                         <form method="post" action="{% url 'eliminar_contrato' contrato.id %}" style="display: inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirmarEliminacion(event);">Eliminar</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmarEliminacion(event);">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </form>
                     {% endif %}
                 </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="11" class="text-center">No hay contratos registrados.</td>
             </tr>
             {% endfor %}
         </tbody>
