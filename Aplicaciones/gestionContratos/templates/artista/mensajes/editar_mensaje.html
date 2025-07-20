@@ -7,14 +7,11 @@
   <form method="post">
     {% csrf_token %}
     <div class="mb-3">
-      <label for="receptor" class="form-label">Receptor:</label>
-      <select name="receptor" id="receptor" class="form-select" disabled>
-        {% for user in usuarios %}
-          <option value="{{ user.id }}" {% if user.id == mensaje.receptor.id %}selected{% endif %}>{{ user.username }}</option>
-        {% endfor %}
-      </select>
-      <small class="text-muted">El receptor no se puede modificar.</small>
+        <label for="receptor" class="form-label">Receptor:</label>
+        <input type="text" class="form-control" value="Administrador" disabled>
+        <input type="hidden" name="receptor" value="{{ usuario.id }}">
     </div>
+    
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>
       <textarea name="texto" id="texto" class="form-control" rows="4" required>{{ mensaje.texto }}</textarea>
