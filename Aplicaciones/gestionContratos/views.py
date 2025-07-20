@@ -962,3 +962,126 @@ def listar_contratos_administrador(request):
 
 
 # ---- Mensajes ----
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.utils import timezone
+from Aplicaciones.Usuario.models import Usuario
+from Aplicaciones.Mensaje.models import Mensaje
+
+# --- ADMINISTRADOR ---
+
+def listar_mensajes_admin(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    admin = Usuario.objects.get(id=usuario_id)
+    if admin.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    mensajes = Mensaje.objects.filter(receptor=admin).select_related('emisor').order_by('-fecha')
+
+    return render(request, 'administrador/mensajes/lista_mensajes.html', {
+        'usuario': admin,
+        'mensajes': mensajes
+    })
+
+
+# --- CLIENTE / ARTISTA ---
+
+def listar_mensajes_usuario(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+    if usuario.rol not in ['Cliente', 'Artista']:
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    mensajes = Mensaje.objects.filter(emisor=usuario).select_related('receptor').order_by('-fecha')
+
+    template = 'cliente/mensajes/lista_mensajes.html' if usuario.rol == 'Cliente' else 'artista/mensajes/lista_mensajes.html'
+    return render(request, template, {
+        'usuario': usuario,
+        'mensajes': mensajes
+    })
+
+
+def nuevo_mensaje_usuario(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+    
+    usuario = Usuario.objects.get(id=usuario_id)
+    if usuario.rol not in ['Cliente', 'Artista']:
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    if request.method == 'POST':
+        texto = request.POST.get('texto')
+
+        # Buscar al administrador como receptor
+        try:
+            admin = Usuario.objects.filter(rol='Administrador').first()
+            if not admin:
+                messages.error(request, "No se encontró un administrador receptor.")
+                return redirect('listar_mensajes_usuario')
+        except:
+            messages.error(request, "Error al buscar administrador.")
+            return redirect('listar_mensajes_usuario')
+
+        Mensaje.objects.create(
+            emisor=usuario,
+            receptor=admin,
+            texto=texto
+        )
+        messages.success(request, "Mensaje enviado correctamente.")
+        return redirect('listar_mensajes_usuario')
+
+    template = 'cliente/mensajes/nuevo_mensaje.html' if usuario.rol == 'Cliente' else 'artista/mensajes/nuevo_mensaje.html'
+    return render(request, template, {'usuario': usuario})
+
+
+def editar_mensaje_usuario(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+    
+    usuario = Usuario.objects.get(id=usuario_id)
+    mensaje = get_object_or_404(Mensaje, id=id, emisor=usuario)
+
+    if usuario.rol not in ['Cliente', 'Artista']:
+        messages.error(request, "No tienes permisos para editar este mensaje.")
+        return redirect('login')
+
+    if request.method == 'POST':
+        texto = request.POST.get('texto')
+        mensaje.texto = texto
+        mensaje.save()
+
+        messages.success(request, "Mensaje actualizado correctamente.")
+        return redirect('listar_mensajes_usuario')
+
+    template = 'cliente/mensajes/editar_mensaje.html' if usuario.rol == 'Cliente' else 'artista/mensajes/editar_mensaje.html'
+    return render(request, template, {'usuario': usuario, 'mensaje': mensaje})
+
+
+def eliminar_mensaje_usuario(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+    
+    usuario = Usuario.objects.get(id=usuario_id)
+    mensaje = get_object_or_404(Mensaje, id=id, emisor=usuario)
+
+    if usuario.rol not in ['Cliente', 'Artista']:
+        messages.error(request, "No tienes permisos para eliminar este mensaje.")
+        return redirect('login')
+
+    mensaje.delete()
+    messages.success(request, "Mensaje eliminado correctamente.")
+    return redirect('listar_mensajes_usuario')
+
