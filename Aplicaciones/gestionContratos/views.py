@@ -1107,3 +1107,171 @@ def eliminar_mensaje_usuario(request, id):
     else:
         return redirect('artista_listar_mensajes')
     
+
+
+# --- Reseñas ---
+
+# Importa tu modelo Reseña y Usuario
+from Aplicaciones.gestionContratos.models import Usuario, Reseña
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+
+
+# --- ADMINISTRADOR ---
+def listar_resenas_admin(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    admin = Usuario.objects.get(id=usuario_id)
+    if admin.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    resenas = Reseña.objects.select_related('cliente', 'artista').all()
+
+    return render(request, 'administrador/resenas/lista_resenas.html', {
+        'usuario': admin,
+        'resenas': resenas
+    })
+
+
+# --- CLIENTE / ARTISTA ---
+def listar_resenas_usuario(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+    if usuario.rol not in ['Cliente', 'Artista']:
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect('login')
+
+    if usuario.rol == 'Cliente':
+        resenas = Reseña.objects.filter(cliente=usuario).select_related('artista').order_by('-fecha')
+        template = 'cliente/resenas/lista_resenas.html'
+    else:
+        resenas = Reseña.objects.filter(artista=usuario).select_related('cliente').order_by('-fecha')
+        template = 'artista/resenas/lista_resenas.html'
+
+    return render(request, template, {
+        'usuario': usuario,
+        'resenas': resenas
+    })
+
+
+def nueva_resena_usuario(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+    if usuario.rol not in ['Cliente', 'Artista']:
+        messages.error(request, "No tienes permisos para esta acción.")
+        return redirect('login')
+
+    if request.method == 'POST':
+        texto = request.POST.get('texto')
+        puntuacion = request.POST.get('puntuacion')
+        artista_id = request.POST.get('artista')
+
+        try:
+            artista = Usuario.objects.get(id=artista_id, rol='Artista')
+        except Usuario.DoesNotExist:
+            messages.error(request, "Artista no encontrado.")
+            return redirect('cliente_listar_resenas' if usuario.rol == 'Cliente' else 'artista_listar_resenas')
+
+        # Solo Cliente puede crear reseñas
+        if usuario.rol != 'Cliente':
+            messages.error(request, "Solo clientes pueden crear reseñas.")
+            return redirect('login')
+
+        Reseña.objects.create(
+            cliente=usuario,
+            artista=artista,
+            texto=texto,
+            puntuacion=int(puntuacion)
+        )
+        messages.success(request, "Reseña creada correctamente.")
+        if usuario.rol == 'Cliente':
+            return redirect('cliente_listar_resenas')
+        else:
+            return redirect('artista_listar_resenas')
+
+    # Mostrar formulario (puedes pasar lista de artistas para elegir)
+    artistas = Usuario.objects.filter(rol='Artista')
+    if usuario.rol == 'Cliente':
+        template = 'cliente/resenas/nueva_resena.html'
+    else:
+        template = 'artista/resenas/nueva_resena.html'
+
+    return render(request, template, {
+        'usuario': usuario,
+        'artistas': artistas
+    })
+
+
+def editar_resena_usuario(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+    resena = get_object_or_404(Reseña, id=id)
+
+    # Solo el cliente que la creó puede editar
+    if resena.cliente != usuario:
+        messages.error(request, "No tienes permisos para editar esta reseña.")
+        return redirect('login')
+
+    if request.method == 'POST':
+        texto = request.POST.get('texto')
+        puntuacion = request.POST.get('puntuacion')
+
+        resena.texto = texto
+        resena.puntuacion = int(puntuacion)
+        resena.save()
+
+        messages.success(request, "Reseña actualizada correctamente.")
+        if usuario.rol == 'Cliente':
+            return redirect('cliente_listar_resenas')
+        else:
+            return redirect('artista_listar_resenas')
+
+    if usuario.rol == 'Cliente':
+        template = 'cliente/resenas/editar_resena.html'
+    else:
+        template = 'artista/resenas/editar_resena.html'
+
+    return render(request, template, {
+        'usuario': usuario,
+        'resena': resena
+    })
+
+
+def eliminar_resena_usuario(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+    resena = get_object_or_404(Reseña, id=id)
+
+    # Solo cliente que creó la reseña puede eliminarla
+    if resena.cliente != usuario:
+        messages.error(request, "No tienes permisos para eliminar esta reseña.")
+        return redirect('login')
+
+    if request.method == 'POST':
+        resena.delete()
+        messages.success(request, "Reseña eliminada correctamente.")
+        if usuario.rol == 'Cliente':
+            return redirect('cliente_listar_resenas')
+        else:
+            return redirect('artista_listar_resenas')
+
+    messages.error(request, "Solicitud inválida para eliminar reseña.")
+    if usuario.rol == 'Cliente':
+        return redirect('cliente_listar_resenas')
+    else:
+        return redirect('artista_listar_resenas')
