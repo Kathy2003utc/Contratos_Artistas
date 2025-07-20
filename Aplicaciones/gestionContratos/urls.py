@@ -88,22 +88,5 @@ urlpatterns = [
     path('administrador/contratos/', views.listar_contratos_administrador, name='listar_contratos_administrador'),
 
 
-        # ------------------------ MENSAJES ------------------------
-
-    # ADMINISTRADOR - solo puede ver mensajes recibidos
-    path('administrador/mensajes/', views.listar_mensajes_admin, name='mensajes_admin'),
-
-    # CLIENTE - puede hacer CRUD de sus mensajes enviados
-    path('cliente/mensajes/', views.listar_mensajes_usuario, name='listar_mensajes_cliente'),
-    path('cliente/mensajes/nuevo/', views.nuevo_mensaje_usuario, name='nuevo_mensaje_cliente'),
-    path('cliente/mensajes/editar/<int:id>/', views.editar_mensaje_usuario, name='editar_mensaje_cliente'),
-    path('cliente/mensajes/eliminar/<int:id>/', views.eliminar_mensaje_usuario, name='eliminar_mensaje_cliente'),
-
-    # ARTISTA - puede hacer CRUD de sus mensajes enviados
-    path('artista/mensajes/', views.listar_mensajes_usuario, name='listar_mensajes_artista'),
-    path('artista/mensajes/nuevo/', views.nuevo_mensaje_usuario, name='nuevo_mensaje_artista'),
-    path('artista/mensajes/editar/<int:id>/', views.editar_mensaje_usuario, name='editar_mensaje_artista'),
-    path('artista/mensajes/eliminar/<int:id>/', views.eliminar_mensaje_usuario, name='eliminar_mensaje_artista'),
-
 
 ]
