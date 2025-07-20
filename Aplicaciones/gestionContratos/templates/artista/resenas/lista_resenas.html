@@ -1,33 +1,47 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Mis Reseñas Recibidas - Artista</title>
-</head>
-<body>
-  <h1>Reseñas Recibidas (Artista)</h1>
-  <p>Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
-  <table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Texto</th>
-        <th>Puntuación</th>
-        <th>Fecha</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for resena in resenas %}
-      <tr>
-        <td>{{ resena.cliente.username }}</td>
-        <td>{{ resena.texto }}</td>
-        <td>{{ resena.puntuacion }}</td>
-        <td>{{ resena.fecha }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="4">No tienes reseñas.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</body>
-</html>
+{% extends 'artista/plantilla.html' %}
+{% load static %}
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary mb-4">Reseñas Recibidas (Artista)</h1>
+    <p class="text-center">Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
+
+    <table class="table table-bordered table-striped table-hover" id="tbl_resenas_artista">
+        <thead class="table-primary">
+            <tr>
+                <th>Cliente</th>
+                <th>Texto</th>
+                <th>Puntuación</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resena in resenas %}
+            <tr>
+                <td>{{ resena.cliente.username }}</td>
+                <td>{{ resena.texto }}</td>
+                <td>{{ resena.puntuacion }}</td>
+                <td>{{ resena.fecha }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No tienes reseñas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+  $('#tbl_resenas_artista').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+</script>
+
+<br><br><br>
+{% endblock %}
