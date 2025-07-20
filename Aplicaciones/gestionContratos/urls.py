@@ -109,6 +109,20 @@ urlpatterns = [
 
    
 
+   # ------------------------ URLS del apartado de RESEÑAS ------------------------
+
+    # ADMINISTRADOR - solo puede ver todas las reseñas
+    path('administrador/resenas/', views.listar_resenas_admin, name='admin_listar_resenas'),
+
+    # CLIENTE - CRUD de sus reseñas
+    path('cliente/resenas/', views.listar_resenas_usuario, name='cliente_listar_resenas'),
+    path('cliente/resenas/nuevo/', views.nueva_resena_usuario, name='cliente_nueva_resena'),
+    path('cliente/resenas/editar/<int:id>/', views.editar_resena_usuario, name='cliente_editar_resena'),
+    path('cliente/resenas/eliminar/<int:id>/', views.eliminar_resena_usuario, name='cliente_eliminar_resena'),
+
+    # ARTISTA - SOLO PUEDE VER
+    path('artista/resenas/', views.listar_resenas_usuario, name='artista_listar_resenas'),
+
 
 
 
