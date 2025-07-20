@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Reseña - Cliente</title>
+</head>
+<body>
+  <h1>Editar Reseña</h1>
+  <p>Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
+  <form action="" method="post">
+    {% csrf_token %}
+    <label>Artista: {{ resena.artista.username }}</label><br><br>
+
+    <label for="texto">Texto:</label><br>
+    <textarea name="texto" id="texto" rows="4" cols="50" required>{{ resena.texto }}</textarea><br><br>
+
+    <label for="puntuacion">Puntuación (1-5):</label>
+    <input type="number" name="puntuacion" id="puntuacion" min="1" max="5" value="{{ resena.puntuacion }}" required><br><br>
+
+    <button type="submit">Actualizar</button>
+  </form>
+  <br>
+  <a href="{% url 'cliente_listar_resenas' %}">Volver a lista</a>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis Reseñas - Cliente</title>
+</head>
+<body>
+  <h1>Mis Reseñas (Cliente)</h1>
+  <p>Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
+  <a href="{% url 'cliente_nueva_resena' %}">Nueva Reseña</a>
+  <table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Artista</th>
+        <th>Texto</th>
+        <th>Puntuación</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for resena in resenas %}
+      <tr>
+        <td>{{ resena.artista.username }}</td>
+        <td>{{ resena.texto }}</td>
+        <td>{{ resena.puntuacion }}</td>
+        <td>{{ resena.fecha }}</td>
+        <td>
+          <a href="{% url 'cliente_editar_resena' resena.id %}">Editar</a> |
+          <form action="{% url 'cliente_eliminar_resena' resena.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar esta reseña?');">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No tienes reseñas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
