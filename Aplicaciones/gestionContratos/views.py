@@ -1323,4 +1323,4 @@ def resumen_mensajes_admin(request):
         'total_artistas': total_artistas,
     })
 
-#--- pruebas unitarias ---
+#--- pruebas unitarias 2.0 ---
