@@ -960,7 +960,6 @@ def listar_contratos_administrador(request):
         'contratos': contratos,
     })
 
-
 # ---- Mensajes ----
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -1028,10 +1027,17 @@ def nuevo_mensaje_usuario(request):
             admin = Usuario.objects.filter(rol='Administrador').first()
             if not admin:
                 messages.error(request, "No se encontró un administrador receptor.")
-                return redirect('listar_mensajes_usuario')
+                # Ajuste aquí:
+                if usuario.rol == 'Cliente':
+                    return redirect('cliente_listar_mensajes')
+                else:
+                    return redirect('artista_listar_mensajes')
         except:
             messages.error(request, "Error al buscar administrador.")
-            return redirect('listar_mensajes_usuario')
+            if usuario.rol == 'Cliente':
+                return redirect('cliente_listar_mensajes')
+            else:
+                return redirect('artista_listar_mensajes')
 
         Mensaje.objects.create(
             emisor=usuario,
@@ -1039,7 +1045,10 @@ def nuevo_mensaje_usuario(request):
             texto=texto
         )
         messages.success(request, "Mensaje enviado correctamente.")
-        return redirect('listar_mensajes_usuario')
+        if usuario.rol == 'Cliente':
+            return redirect('cliente_listar_mensajes')
+        else:
+            return redirect('artista_listar_mensajes')
 
     template = 'cliente/mensajes/nuevo_mensaje.html' if usuario.rol == 'Cliente' else 'artista/mensajes/nuevo_mensaje.html'
     return render(request, template, {'usuario': usuario})
@@ -1063,7 +1072,10 @@ def editar_mensaje_usuario(request, id):
         mensaje.save()
 
         messages.success(request, "Mensaje actualizado correctamente.")
-        return redirect('listar_mensajes_usuario')
+        if usuario.rol == 'Cliente':
+            return redirect('cliente_listar_mensajes')
+        else:
+            return redirect('artista_listar_mensajes')
 
     template = 'cliente/mensajes/editar_mensaje.html' if usuario.rol == 'Cliente' else 'artista/mensajes/editar_mensaje.html'
     return render(request, template, {'usuario': usuario, 'mensaje': mensaje})
@@ -1083,5 +1095,7 @@ def eliminar_mensaje_usuario(request, id):
 
     mensaje.delete()
     messages.success(request, "Mensaje eliminado correctamente.")
-    return redirect('listar_mensajes_usuario')
-
+    if usuario.rol == 'Cliente':
+        return redirect('cliente_listar_mensajes')
+    else:
+        return redirect('artista_listar_mensajes')

@@ -1,40 +1,79 @@
-{% extends 'administrador/plantilla.html' %}
-{% block contenido %}
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+{% block contenido %} 
+<br><br><br>
 
-<div class="container mt-4">
-  <h3 class="mb-4">Mis Mensajes Enviados</h3>
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Mis Mensajes Enviados</h1>
+    <hr>
 
-  <a href="{% url 'cliente_nuevo_mensaje' %}" class="btn btn-success mb-3">Nuevo Mensaje</a>
+    <div class="mb-3 text-end">
+        <a href="{% url 'cliente_nuevo_mensaje' %}" class="btn btn-success">Nuevo Mensaje</a>
+    </div>
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-info">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
+    <table class="table table-bordered table-striped table-hover" id="tbl_mensajes">
+        <thead class="table-primary">
+            <tr>
+                <th>Receptor</th>
+                <th>Mensaje</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mensaje in mensajes %}
+            <tr>
+                <td>{{ mensaje.receptor.username }}</td>
+                <td>{{ mensaje.texto }}</td>
+                <td>{{ mensaje.fecha }}</td>
+                <td>
+                    <a href="{% url 'cliente_editar_mensaje' mensaje.id %}" class="btn btn-outline-warning btn-sm" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <br><br>
+                    <form method="post" action="{% url 'cliente_eliminar_mensaje' mensaje.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmarEliminacion(event);" title="Eliminar">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-  <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Receptor</th>
-        <th>Mensaje</th>
-        <th>Fecha</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for mensaje in mensajes %}
-      <tr>
-        <td>{{ mensaje.receptor.username }}</td>
-        <td>{{ mensaje.texto }}</td>
-        <td>{{ mensaje.fecha }}</td>
-        <td>
-          <a href="{% url 'cliente_editar_mensaje' mensaje.id %}" class="btn btn-sm btn-warning">Editar</a>
-          <a href="{% url 'cliente_eliminar_mensaje' mensaje.id %}" class="btn btn-sm btn-danger">Eliminar</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 </div>
 
+<script>
+function confirmarEliminacion(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            e.target.closest("form").submit();
+        }
+    });
+}
+</script>
+
+<script>
+  $('#tbl_mensajes').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+</script>
+
+<br><br><br>
 {% endblock %}

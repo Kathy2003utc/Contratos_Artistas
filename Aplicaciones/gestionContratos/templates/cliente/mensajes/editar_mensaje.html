@@ -1,21 +1,17 @@
 {% extends 'cliente/plantilla.html' %}
 {% block contenido %}
 
-<div class="container mt-4">
+<div class="container mt-5">
   <h3 class="mb-4">Editar Mensaje</h3>
 
   <form method="post">
     {% csrf_token %}
     <div class="mb-3">
-      <label for="receptor" class="form-label">Receptor:</label>
-      <select name="receptor" id="receptor" class="form-select">
-        {% for user in usuarios %}
-          <option value="{{ user.id }}" {% if user.id == mensaje.receptor.id %}selected{% endif %}>
-            {{ user.username }}
-          </option>
-        {% endfor %}
-      </select>
+        <label for="receptor" class="form-label">Receptor:</label>
+        <input type="text" class="form-control" value="Administrador" disabled>
+        <input type="hidden" name="receptor" value="{{ mensaje.receptor.id }}">
     </div>
+
 
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>

@@ -87,6 +87,9 @@ urlpatterns = [
     #ruta para ver lista de contratos como administrador
     path('administrador/contratos/', views.listar_contratos_administrador, name='listar_contratos_administrador'),
 
+
+    
+
     # ------------------------ URLS del apartado de MENSAJES ------------------------
 
     # ADMINISTRADOR - solo puede ver mensajes recibidos

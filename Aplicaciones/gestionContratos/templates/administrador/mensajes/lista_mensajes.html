@@ -14,6 +14,7 @@
     <thead class="table-dark">
       <tr>
         <th>Emisor</th>
+        <th>Rol del Emisor</th>
         <th>Mensaje</th>
         <th>Fecha</th>
       </tr>
@@ -22,6 +23,7 @@
       {% for mensaje in mensajes %}
       <tr>
         <td>{{ mensaje.emisor.username }}</td>
+        <td>{{ mensaje.emisor.rol }}</td>
         <td>{{ mensaje.texto }}</td>
         <td>{{ mensaje.fecha }}</td>
       </tr>
