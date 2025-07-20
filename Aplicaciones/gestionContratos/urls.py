@@ -113,6 +113,8 @@ urlpatterns = [
 
     # ADMINISTRADOR - solo puede ver todas las reseñas
     path('administrador/resenas/', views.listar_resenas_admin, name='admin_listar_resenas'),
+    path('administrador/resenas/eliminar/<int:id>/', views.eliminar_resena_admin, name='admin_eliminar_resena'),
+
 
     # CLIENTE - CRUD de sus reseñas
     path('cliente/resenas/', views.listar_resenas_usuario, name='cliente_listar_resenas'),

@@ -1108,7 +1108,6 @@ def eliminar_mensaje_usuario(request, id):
         return redirect('artista_listar_mensajes')
     
 
-
 # --- Reseñas ---
 
 # Importa tu modelo Reseña y Usuario
@@ -1134,6 +1133,27 @@ def listar_resenas_admin(request):
         'usuario': admin,
         'resenas': resenas
     })
+
+
+def eliminar_resena_admin(request, id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    admin = Usuario.objects.get(id=usuario_id)
+    if admin.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para eliminar reseñas.")
+        return redirect('login')
+
+    resena = get_object_or_404(Reseña, id=id)
+
+    if request.method == 'POST':
+        resena.delete()
+        messages.success(request, "Reseña eliminada correctamente.")
+        return redirect('admin_listar_resenas')
+
+    messages.error(request, "Solicitud inválida para eliminar reseña.")
+    return redirect('admin_listar_resenas')
 
 
 # --- CLIENTE / ARTISTA ---

@@ -1,35 +1,79 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Lista de Reseñas - Administrador</title>
-</head>
-<body>
-  <h1>Lista de Reseñas (Administrador)</h1>
-  <p>Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
-  <table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Artista</th>
-        <th>Texto</th>
-        <th>Puntuación</th>
-        <th>Fecha</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for resena in resenas %}
-      <tr>
-        <td>{{ resena.cliente.username }}</td>
-        <td>{{ resena.artista.username }}</td>
-        <td>{{ resena.texto }}</td>
-        <td>{{ resena.puntuacion }}</td>
-        <td>{{ resena.fecha }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="5">No hay reseñas disponibles.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</body>
-</html>
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Lista de Reseñas (Administrador)</h1>
+    <p class="text-center text-secondary">Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
+    <hr>
+
+    <table class="table table-bordered table-striped table-hover" id="tbl_resenas_admin">
+        <thead class="table-primary">
+            <tr>
+                <th>Cliente</th>
+                <th>Artista</th>
+                <th>Texto</th>
+                <th>Puntuación</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resena in resenas %}
+            <tr>
+                <td>{{ resena.cliente.username }}</td>
+                <td>{{ resena.artista.username }}</td>
+                <td>{{ resena.texto }}</td>
+                <td>{{ resena.puntuacion }}</td>
+                <td>{{ resena.fecha }}</td>
+                <td>
+                    <form method="post" action="{% url 'admin_eliminar_resena' resena.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmarEliminacion(event);" title="Eliminar">
+                            <i class="fa fa-trash"></i> Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No hay reseñas disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function confirmarEliminacion(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            e.target.closest("form").submit();
+        }
+    });
+}
+</script>
+
+<script>
+  $('#tbl_resenas_admin').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+</script>
+
+<br><br><br>
+{% endblock %}

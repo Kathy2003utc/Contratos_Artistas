@@ -1,35 +1,52 @@
 {% extends 'administrador/plantilla.html' %}
+{% load static %}
 {% block contenido %}
+<br><br><br>
 
-<div class="container mt-4">
-  <h3 class="mb-4">Mensajes Recibidos</h3>
+<div class="container mt-5">
+    <h3 class="text-center text-primary mb-4">Mensajes Recibidos</h3>
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-info">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-
-  <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>Emisor</th>
-        <th>Rol del Emisor</th>
-        <th>Mensaje</th>
-        <th>Fecha</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for mensaje in mensajes %}
-      <tr>
-        <td>{{ mensaje.emisor.username }}</td>
-        <td>{{ mensaje.emisor.rol }}</td>
-        <td>{{ mensaje.texto }}</td>
-        <td>{{ mensaje.fecha }}</td>
-      </tr>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
       {% endfor %}
-    </tbody>
-  </table>
+    {% endif %}
+
+    <table class="table table-bordered table-striped table-hover" id="tbl_mensajes_recibidos_admin">
+        <thead class="table-dark">
+            <tr>
+                <th>Emisor</th>
+                <th>Rol del Emisor</th>
+                <th>Mensaje</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mensaje in mensajes %}
+            <tr>
+                <td>{{ mensaje.emisor.username }}</td>
+                <td>{{ mensaje.emisor.rol }}</td>
+                <td>{{ mensaje.texto }}</td>
+                <td>{{ mensaje.fecha }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No hay mensajes recibidos.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
+<script>
+  $('#tbl_mensajes_recibidos_admin').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+</script>
+
+<br><br><br>
 {% endblock %}
