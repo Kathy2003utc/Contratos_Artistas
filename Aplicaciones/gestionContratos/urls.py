@@ -87,6 +87,24 @@ urlpatterns = [
     #ruta para ver lista de contratos como administrador
     path('administrador/contratos/', views.listar_contratos_administrador, name='listar_contratos_administrador'),
 
+    # ------------------------ MENSAJES ------------------------
+
+    # ADMINISTRADOR - solo puede ver mensajes recibidos
+    path('administrador/mensajes/', views.listar_mensajes_admin, name='admin_listar_mensajes'),
+
+    # CLIENTE - CRUD de mensajes enviados
+    path('cliente/mensajes/', views.listar_mensajes_usuario, name='cliente_listar_mensajes'),
+    path('cliente/mensajes/nuevo/', views.nuevo_mensaje_usuario, name='cliente_nuevo_mensaje'),
+    path('cliente/mensajes/editar/<int:id>/', views.editar_mensaje_usuario, name='cliente_editar_mensaje'),
+    path('cliente/mensajes/eliminar/<int:id>/', views.eliminar_mensaje_usuario, name='cliente_eliminar_mensaje'),
+
+    # ARTISTA - CRUD de mensajes enviados
+    path('artista/mensajes/', views.listar_mensajes_usuario, name='artista_listar_mensajes'),
+    path('artista/mensajes/nuevo/', views.nuevo_mensaje_usuario, name='artista_nuevo_mensaje'),
+    path('artista/mensajes/editar/<int:id>/', views.editar_mensaje_usuario, name='artista_editar_mensaje'),
+    path('artista/mensajes/eliminar/<int:id>/', views.eliminar_mensaje_usuario, name='artista_eliminar_mensaje'),
+
+
 
 
 ]
