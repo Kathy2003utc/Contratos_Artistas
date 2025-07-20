@@ -87,7 +87,7 @@ urlpatterns = [
     #ruta para ver lista de contratos como administrador
     path('administrador/contratos/', views.listar_contratos_administrador, name='listar_contratos_administrador'),
 
-    # ------------------------ MENSAJES ------------------------
+    # ------------------------ URLS del apartado de MENSAJES ------------------------
 
     # ADMINISTRADOR - solo puede ver mensajes recibidos
     path('administrador/mensajes/', views.listar_mensajes_admin, name='admin_listar_mensajes'),
@@ -103,8 +103,6 @@ urlpatterns = [
     path('artista/mensajes/nuevo/', views.nuevo_mensaje_usuario, name='artista_nuevo_mensaje'),
     path('artista/mensajes/editar/<int:id>/', views.editar_mensaje_usuario, name='artista_editar_mensaje'),
     path('artista/mensajes/eliminar/<int:id>/', views.eliminar_mensaje_usuario, name='artista_eliminar_mensaje'),
-
-
 
 
 ]
