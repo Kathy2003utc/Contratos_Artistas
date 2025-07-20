@@ -128,4 +128,6 @@ urlpatterns = [
 
 
 
+    path('administrador/presentacion/resumen/', views.resumen_mensajes_admin, name='resumen_mensajes_admin'),
+
 ]

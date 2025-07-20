@@ -1295,3 +1295,31 @@ def eliminar_resena_usuario(request, id):
         return redirect('cliente_listar_resenas')
     else:
         return redirect('artista_listar_resenas')
+
+
+
+
+from Aplicaciones.gestionContratos.models import Usuario, Mensaje
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def resumen_mensajes_admin(request):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+
+    admin = Usuario.objects.get(id=usuario_id)
+    if admin.rol != 'Administrador':
+        messages.error(request, "No tienes permisos para esta sección.")
+        return redirect('login')
+
+    # Usar emisor__rol en lugar de remitente__rol
+    total_clientes = Mensaje.objects.filter(emisor__rol='Cliente').count()
+    total_artistas = Mensaje.objects.filter(emisor__rol='Artista').count()
+
+    return render(request, 'administrador/presentacion/resumen_mensajes.html', {
+        'usuario': admin,
+        'total_clientes': total_clientes,
+        'total_artistas': total_artistas,
+    })
+

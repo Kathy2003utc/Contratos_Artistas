@@ -1,0 +1,46 @@
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+{% block contenido %}
+<div class="container mt-4">
+    <h2 class="mb-4">Resumen de Mensajes Enviados por Rol</h2>
+    <div id="data" data-clientes="{{ total_clientes|default:0 }}" data-artistas="{{ total_artistas|default:0 }}"></div>
+    <canvas id="graficoMensajes" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('graficoMensajes').getContext('2d');
+    const dataDiv = document.getElementById('data');
+    const totalClientes = parseInt(dataDiv.getAttribute('data-clientes')) || 0;
+    const totalArtistas = parseInt(dataDiv.getAttribute('data-artistas')) || 0;
+
+    const data = {
+        labels: ['Clientes', 'Artistas'],
+        datasets: [{
+            label: 'Cantidad de Mensajes',
+            data: [totalClientes, totalArtistas],
+            backgroundColor: [
+                'rgba(255, 205, 86, 0.6)',
+                'rgba(54, 162, 235, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 205, 86, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    };
+
+    new Chart(ctx, config);
+</script>
+{% endblock %}
