@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Reseñas - Administrador</title>
+</head>
+<body>
+  <h1>Lista de Reseñas (Administrador)</h1>
+  <p>Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
+  <table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Artista</th>
+        <th>Texto</th>
+        <th>Puntuación</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for resena in resenas %}
+      <tr>
+        <td>{{ resena.cliente.username }}</td>
+        <td>{{ resena.artista.username }}</td>
+        <td>{{ resena.texto }}</td>
+        <td>{{ resena.puntuacion }}</td>
+        <td>{{ resena.fecha }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No hay reseñas disponibles.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
