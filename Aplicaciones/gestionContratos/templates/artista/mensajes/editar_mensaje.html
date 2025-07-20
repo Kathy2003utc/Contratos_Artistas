@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Editar Mensaje</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body>
+{% extends 'artista/plantilla.html' %}
+{% block contenido %}
+<br><br><br>
 <div class="container mt-4">
   <h3 class="mb-4">Editar Mensaje</h3>
 
@@ -13,11 +8,12 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="receptor" class="form-label">Receptor:</label>
-      <select name="receptor" id="receptor" class="form-select">
+      <select name="receptor" id="receptor" class="form-select" disabled>
         {% for user in usuarios %}
           <option value="{{ user.id }}" {% if user.id == mensaje.receptor.id %}selected{% endif %}>{{ user.username }}</option>
         {% endfor %}
       </select>
+      <small class="text-muted">El receptor no se puede modificar.</small>
     </div>
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>
@@ -27,5 +23,5 @@
     <a href="{% url 'artista_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>
-</body>
-</html>
+<br><br><br>
+{% endblock %}

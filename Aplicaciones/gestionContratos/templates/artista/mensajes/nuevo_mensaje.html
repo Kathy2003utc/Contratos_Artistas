@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Nuevo Mensaje</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body>
+{% extends 'artista/plantilla.html' %}
+{% block contenido %}
+<br><br><br>
 <div class="container mt-4">
   <h3 class="mb-4">Nuevo Mensaje</h3>
 
@@ -14,7 +9,7 @@
     <div class="mb-3">
         <label for="receptor" class="form-label">Receptor:</label>
         <input type="text" class="form-control" value="Administrador" disabled>
-        <input type="hidden" name="receptor" value="{{ mensaje.receptor.id }}">
+        <input type="hidden" name="receptor" value="{{ usuario.id }}">
     </div>
     
     <div class="mb-3">
@@ -25,5 +20,5 @@
     <a href="{% url 'artista_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>
-</body>
-</html>
+<br><br><br>
+{% endblock %}
