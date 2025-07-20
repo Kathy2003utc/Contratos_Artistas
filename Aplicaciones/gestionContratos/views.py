@@ -1324,3 +1324,5 @@ def resumen_mensajes_admin(request):
     })
 
 #--- pruebas unitarias 2.0 ---
+
+# ---- mas pruebas unitarias ----
