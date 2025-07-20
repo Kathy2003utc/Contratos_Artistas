@@ -1322,7 +1322,3 @@ def resumen_mensajes_admin(request):
         'total_clientes': total_clientes,
         'total_artistas': total_artistas,
     })
-
-#--- pruebas unitarias 2.0 ---
-
-# ---- mas pruebas unitarias ----
