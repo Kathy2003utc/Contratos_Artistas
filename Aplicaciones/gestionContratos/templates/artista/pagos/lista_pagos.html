@@ -1,0 +1,58 @@
+{% extends 'artista/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-success">Mis Pagos Recibidos</h1>
+    <hr>
+
+    {% if pagos %}
+    <table class="table table-bordered table-striped table-hover" id="tbl_pagos">
+        <thead class="table-success">
+            <tr>
+                <th>ID</th>
+                <th>Contrato</th>
+                <th>Cliente</th>
+                <th>Monto</th>
+                <th>Fecha de Pago</th>
+                <th>Comprobante</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos %}
+            <tr>
+                <td>{{ pago.id }}</td>
+                <td>{{ pago.contrato }}</td>
+                <td>{{ pago.cliente.username }}</td>
+                <td>${{ pago.monto }}</td>
+                <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                <td>
+                    {% if pago.comprobante_imagen %}
+                        <img src="{{ pago.comprobante_imagen.url }}" alt="Comprobante pago" height="80px" style="object-fit: contain; border:1px solid #ccc; padding:2px;">
+                    {% else %}
+                        Ninguno
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center">No tienes pagos registrados.</p>
+    {% endif %}
+</div>
+
+<script>
+  $('#tbl_pagos').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+</script>
+
+<br><br><br>
+{% endblock %}

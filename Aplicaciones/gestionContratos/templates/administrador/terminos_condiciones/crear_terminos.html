@@ -1,0 +1,32 @@
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Crear Nuevo Término y Condición</h1>
+    <hr>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="version" class="form-label">Versión</label>
+            <input type="text" class="form-control" id="version" name="version" placeholder="Ej: v1.0, 2025-07" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="texto" class="form-label">Texto</label>
+            <textarea class="form-control" id="texto" name="texto" rows="8" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save"></i> Guardar
+        </button>
+        <a href="{% url 'listar_terminos' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<br><br><br>
+{% endblock %}

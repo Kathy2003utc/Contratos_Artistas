@@ -1,0 +1,143 @@
+{% extends 'artista/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Mis Contratos</h1>
+    <hr>
+
+    <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" id="tbl_contrato">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Evento</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Fecha del Contrato</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Costo</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contrato in contratos %}
+            <tr>
+                <td>{{ contrato.id }}</td>
+                <td>{{ contrato.evento.titulo }}</td>
+                <td>{{ contrato.evento.cliente.first_name }} {{ contrato.evento.cliente.last_name }}</td>
+                <td>
+                    {% if contrato.estado == 'Aceptado' %}
+                        <span class="text-success fw-bold">{{ contrato.estado }}</span>
+                    {% elif contrato.estado == 'Rechazado' %}
+                        <span class="text-danger fw-bold">{{ contrato.estado }}</span>
+                    {% else %}
+                        <span class="text-warning fw-bold">{{ contrato.estado }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ contrato.fecha_contrato|date:"d/m/Y" }}</td>
+                <td>
+                    {% if contrato.fecha_inicio %}
+                        {{ contrato.fecha_inicio|date:"d/m/Y" }}
+                    {% else %}
+                        <span class="text-muted">No definido</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if contrato.fecha_fin %}
+                        {{ contrato.fecha_fin|date:"d/m/Y" }}
+                    {% else %}
+                        <span class="text-muted">No definido</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if contrato.costo %}
+                        ${{ contrato.costo }}
+                    {% else %}
+                        <span class="text-muted">No definido</span>
+                    {% endif %}
+                </td>
+                <td>
+                {% if contrato.observaciones %}
+                    {{ contrato.observaciones }}
+                {% else %}
+                    <span class="text-muted">Sin observaciones</span>
+                {% endif %}
+            </td>
+
+                <td>
+                    {% if contrato.estado == 'Pendiente' %}
+                    <form method="post" action="{% url 'accion_contrato_artista' contrato.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="aceptar">
+                        <button type="submit" class="btn btn-sm btn-success me-1">Aceptar</button>
+                    </form>
+                    <form method="post" action="{% url 'accion_contrato_artista' contrato.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="rechazar">
+                        <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
+                    </form>
+                    {% else %}
+                        <a href="{% url 'editar_estado_contrato_artista' contrato.id %}" class="btn btn-sm btn-warning">
+                            Editar estado
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<script>
+function confirmarAccion(e, mensaje) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: mensaje,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, confirmar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            e.target.closest("form").submit();
+        }
+    });
+}
+
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        const accion = form.querySelector('input[name="accion"]').value;
+        let mensaje = '';
+        if (accion === 'aceptar') {
+            mensaje = 'Aceptar este contrato.';
+        } else if (accion === 'rechazar') {
+            mensaje = 'Rechazar este contrato.';
+        }
+        confirmarAccion(e, mensaje);
+    });
+});
+</script>
+
+<script>
+  $('#tbl_contrato').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+
+</script>
+
+<br><br><br>
+{% endblock %}

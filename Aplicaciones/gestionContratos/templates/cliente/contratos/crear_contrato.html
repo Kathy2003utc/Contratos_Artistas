@@ -1,0 +1,105 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+{% block contenido %} 
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Crear Contrato</h1>
+    <hr>
+
+    <form method="post" class="mx-auto" style="max-width: 600px;" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="evento" class="form-label">Evento:</label>
+            <select id="evento" name="evento" class="form-select" required>
+                {% for evento in eventos %}
+                    <option value="{{ evento.id }}">{{ evento.titulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="artista" class="form-label">Artista:</label>
+            <select id="artista" name="artista" class="form-select" required>
+                {% for artista in artistas %}
+                    <option value="{{ artista.id }}">{{ artista.first_name }} {{ artista.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="fecha_inicio" class="form-label">Fecha de Inicio:</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="fecha_fin" class="form-label">Fecha de Fin:</label>
+            <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="costo" class="form-label">Costo:</label>
+            <input type="number" id="costo" name="costo" class="form-control" step="0.01" min="0">
+        </div>
+
+        <div class="mb-3">
+            <label for="pdf_certificado_sanitario">Contrato en PDF</label>
+            <input type="file" name="pdf" id="pdf" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones:</label>
+            <textarea id="observaciones" name="observaciones" class="form-control" rows="3"></textarea>
+        </div>
+
+        <input type="hidden" name="estado" value="Pendiente">
+
+        <button type="submit" class="btn btn-success">Guardar Contrato</button>
+        <a href="{% url 'listar_contratos' %}" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>
+
+
+<!-- Mostrar opciones de Aceptar o Rechazar solo si el artista está autenticado y es el asignado -->
+{% if contrato and user.id == contrato.artista.id and contrato.estado == 'Pendiente' %}
+<div class="container mt-4 text-center">
+    <h4>Este contrato está pendiente. ¿Deseas aceptarlo o rechazarlo?</h4>
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="accion" value="aceptar">
+        <button type="submit" class="btn btn-success">Aceptar</button>
+    </form>
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="accion" value="rechazar">
+        <button type="submit" class="btn btn-danger ms-2">Rechazar</button>
+    </form>
+</div>
+{% endif %}
+
+<!-- Mostrar estado actual del contrato -->
+{% if contrato %}
+<div class="container mt-4">
+    <h5>Estado actual del contrato: 
+        {% if contrato.estado == 'Aceptado' %}
+            <span class="text-success">{{ contrato.estado }}</span>
+        {% elif contrato.estado == 'Rechazado' %}
+            <span class="text-danger">{{ contrato.estado }}</span>
+        {% else %}
+            <span class="text-warning">{{ contrato.estado }}</span>
+        {% endif %}
+    </h5>
+</div>
+{% endif %}
+
+<script>
+    $("#pdf").fileinput({
+        language: "es",
+        allowedFileExtensions: ["pdf"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
+
+{% endblock %}

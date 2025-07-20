@@ -1,0 +1,97 @@
+{% extends 'artista/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br><br><br><br>
+<style>
+    .profile-card {
+        max-width: 600px;
+        margin: 0 auto;
+        margin-top: 50px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-top: -75px;
+        border: 5px solid white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .btn-rounded {
+        border-radius: 30px;
+    }
+</style>
+
+<body class="bg-light">
+    <div class="container text-center">
+
+        <div class="profile-card p-4 mt-4">
+            <div class="text-center position-relative">
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="profile-image">
+                <h4 class="mt-3">{{ usuario.first_name }} {{ usuario.last_name }}</h4>
+                <p class="text-muted">{{ usuario.email }}</p>
+            </div>
+
+            <div class="text-start mt-4">
+                <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+                
+                {% if usuario.portafolio_pdf %}
+                    <p><strong>Portafolio PDF:</strong> 
+                        <a href="{{ usuario.portafolio_pdf.url }}" target="_blank" class="text-primary">Descargar</a>
+                    </p>
+                {% endif %}
+
+                <h5 class="mt-4">Redes Sociales</h5>
+                {% if usuario.facebook_url %}
+                    <p><strong>Facebook:</strong> 
+                        <a href="{{ usuario.facebook_url }}" target="_blank">{{ usuario.facebook_url }}</a>
+                    </p>
+                {% endif %}
+                {% if usuario.x_url %}
+                    <p><strong>X (Twitter):</strong> 
+                        <a href="{{ usuario.x_url }}" target="_blank">{{ usuario.x_url }}</a>
+                    </p>
+                {% endif %}
+                {% if usuario.web_url %}
+                    <p><strong>Página Web:</strong> 
+                        <a href="{{ usuario.web_url }}" target="_blank">{{ usuario.web_url }}</a>
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'editar_perfil' %}" class="btn btn-warning btn-rounded w-45">Editar</a>
+                <button class="btn btn-danger btn-rounded w-45" onclick="confirmarEliminacion()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+function confirmarEliminacion() {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡Esta acción eliminará tu perfil permanentemente!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'eliminar_perfil' %}";
+            form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+</script>
+{% endblock %}

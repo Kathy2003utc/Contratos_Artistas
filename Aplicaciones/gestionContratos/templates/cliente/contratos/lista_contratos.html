@@ -1,0 +1,127 @@
+
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+{% block contenido %} 
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Mis Contratos</h1>
+    <hr>
+
+    <div class="mb-3 text-end">
+        <a href="{% url 'crear_contrato' %}" class="btn btn-success">Nuevo Contrato</a>
+    </div>
+
+
+    <table class="table table-bordered table-striped table-hover" id="tbl_contrato">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Evento</th>
+                <th>Artista</th>
+                <th>Estado</th>
+                <th>Fecha del Contrato</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Costo</th>
+                <th>Observaciones</th>
+                <th>Contrato PDF</th> 
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contrato in contratos %}
+            <tr>
+                <td>{{ contrato.id }}</td>
+                <td>{{ contrato.evento.titulo }}</td>
+                <td>{{ contrato.artista.first_name }} {{ contrato.artista.last_name }}</td>
+                <td>
+                    {% if contrato.estado == 'Aceptado' %}
+                        <span class="text-success fw-bold">{{ contrato.estado }}</span>
+                    {% elif contrato.estado == 'Rechazado' %}
+                        <span class="text-danger fw-bold">{{ contrato.estado }}</span>
+                    {% else %}
+                        <span class="text-warning fw-bold">{{ contrato.estado }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ contrato.fecha_contrato|date:"d/m/Y" }}</td>
+                <td>{{ contrato.fecha_inicio|date:"d/m/Y" }}</td>
+                <td>{{ contrato.fecha_fin|date:"d/m/Y" }}</td>
+                <td>${{ contrato.costo|floatformat:2 }}</td>
+                <td>{{ contrato.observaciones|default:"—" }}</td>
+                
+                <td>
+                    {% if contrato.pdf %}
+                        <iframe 
+                            src="{{ contrato.pdf.url }}" 
+                            width="300" 
+                            height="250" 
+                            style="border: 1px solid #ccc;"
+                            title="Vista previa PDF"
+                            type="application/pdf">
+                        </iframe>
+                        <br><small>{{ contrato.pdf.name|slice:"16:" }}</small><br>
+                        <a href="{{ contrato.pdf.url }}" class="btn btn-sm btn-primary mt-1" download>Descargar</a>
+                        <a href="{{ contrato.pdf.url }}" class="btn btn-sm btn-secondary mt-1" target="_blank">Ver en pestaña</a>
+                    {% else %}
+                        Ninguno
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if contrato.estado == 'Pendiente' %}
+                        <a href="{% url 'editar_contrato' contrato.id %}" class="btn btn-outline-warning btn-sm" title="Editar">
+                            <i class="fa fa-pen"></i>
+                        </a>
+                        <br><br>
+                        <form method="post" action="{% url 'eliminar_contrato' contrato.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmarEliminacion(event);">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+
+<script>
+function confirmarEliminacion(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            e.target.closest("form").submit();
+        }
+    });
+}
+</script>
+
+<script>
+  $('#tbl_contrato').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+
+</script>
+
+<br><br><br>
+{% endblock %}
+

@@ -1,0 +1,83 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+{% block contenido %} 
+
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Editar Contrato</h1>
+    <hr>
+
+    <form method="post" class="mx-auto" style="max-width: 600px;">
+        {% csrf_token %}
+
+        <!-- Evento -->
+        <div class="mb-3">
+            <label for="evento" class="form-label">Evento:</label>
+            <select id="evento" name="evento" class="form-select" required>
+                {% for evento in eventos %}
+                    <option value="{{ evento.id }}" {% if contrato.evento.id == evento.id %}selected{% endif %}>
+                        {{ evento.titulo }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Artista -->
+        <div class="mb-3">
+            <label for="artista" class="form-label">Artista:</label>
+            <select id="artista" name="artista" class="form-select" required>
+                {% for artista in artistas %}
+                    <option value="{{ artista.id }}" {% if contrato.artista.id == artista.id %}selected{% endif %}>
+                        {{ artista.first_name }} {{ artista.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Estado -->
+        {% if user.id == contrato.artista.id and contrato.estado == 'Pendiente' %}
+        <div class="mb-3">
+            <label for="estado" class="form-label">Estado:</label>
+            <select id="estado" name="estado" class="form-select" required>
+                <option value="Pendiente" {% if contrato.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="Aceptado" {% if contrato.estado == 'Aceptado' %}selected{% endif %}>Aceptado</option>
+                <option value="Rechazado" {% if contrato.estado == 'Rechazado' %}selected{% endif %}>Rechazado</option>
+            </select>
+        </div>
+        {% else %}
+        <div class="mb-3">
+            <label class="form-label">Estado actual:</label>
+            <input type="text" class="form-control" value="{{ contrato.estado }}" readonly />
+        </div>
+        {% endif %}
+
+        <!-- Fecha de Inicio -->
+        <div class="mb-3">
+            <label for="fecha_inicio" class="form-label">Fecha de Inicio:</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" value="{{ contrato.fecha_inicio|date:'Y-m-d' }}">
+        </div>
+
+        <!-- Fecha de Fin -->
+        <div class="mb-3">
+            <label for="fecha_fin" class="form-label">Fecha de Fin:</label>
+            <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" value="{{ contrato.fecha_fin|date:'Y-m-d' }}">
+        </div>
+
+        <!-- Costo -->
+        <div class="mb-3">
+            <label for="costo" class="form-label">Costo:</label>
+            <input type="number" id="costo" name="costo" class="form-control" step="0.01" min="0" value="{{ contrato.costo }}">
+        </div>
+
+        <!-- Observaciones -->
+        <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones:</label>
+            <textarea id="observaciones" name="observaciones" class="form-control" rows="3">{{ contrato.observaciones }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="{% url 'listar_contratos' %}" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>
+
+
+{% endblock %}
