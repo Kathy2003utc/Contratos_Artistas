@@ -959,4 +959,6 @@ def listar_contratos_administrador(request):
         'usuario': usuario,
         'contratos': contratos,
     })
-# ---- Reseñas ----
+
+
+# ---- Mensajes ----
