@@ -1106,3 +1106,4 @@ def eliminar_mensaje_usuario(request, id):
         return redirect('cliente_listar_mensajes')
     else:
         return redirect('artista_listar_mensajes')
+    

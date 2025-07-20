@@ -107,5 +107,9 @@ urlpatterns = [
     path('artista/mensajes/editar/<int:id>/', views.editar_mensaje_usuario, name='artista_editar_mensaje'),
     path('artista/mensajes/eliminar/<int:id>/', views.eliminar_mensaje_usuario, name='artista_eliminar_mensaje'),
 
+   
+
+
+
 
 ]
