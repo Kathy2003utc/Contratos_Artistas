@@ -1,0 +1,31 @@
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+  <h1 class="text-center text-success">Perfil del Administrador</h1>
+  <hr>
+  <div class="card mx-auto" style="max-width: 600px;">
+    <div class="card-body">
+      <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+      <p><strong>Username:</strong> {{ usuario.username }}</p>
+      <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+      <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+
+      {% if usuario.foto_perfil %}
+      <p><strong>Foto de perfil:</strong><br>
+        <img src="{{ usuario.foto_perfil.url }}" class="img-thumbnail mt-2" width="200">
+      </p>
+      {% endif %}
+
+      <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar perfil</a>
+      <a href="{% url 'dashboard_administrador' %}" class="btn btn-secondary ms-2">Volver</a>
+    </div>
+  </div>
+</div>
+
+<br><br><br>
+{% endblock %}

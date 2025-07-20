@@ -1,0 +1,40 @@
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-4">
+  <h2 class="text-center text-primary">Eventos Registrados por Clientes</h2>
+  <hr>
+
+  {% if eventos %}
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Título</th>
+          <th>Cliente</th>
+          <th>Fecha</th>
+          <th>Ubicación</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for evento in eventos %}
+        <tr>
+          <td>{{ evento.titulo }}</td>
+          <td>{{ evento.cliente.first_name }} {{ evento.cliente.last_name }}</td>
+          <td>{{ evento.fecha }}</td>
+          <td>{{ evento.ubicacion }}</td>
+          <td>{{ evento.descripcion }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted text-center">No hay eventos registrados.</p>
+  {% endif %}
+</div>
+
+<br><br><br>
+{% endblock %}

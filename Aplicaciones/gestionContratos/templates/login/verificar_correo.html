@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de correo</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4 text-success">Verificación de Correo</h3>
+                        <p class="text-muted text-center">Ingresa el código que te enviamos a tu correo electrónico.</p>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="codigo" class="form-label">Código:</label>
+                                <input type="text" name="codigo" id="codigo" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Verificar</button>
+                        </form>
+
+                        <hr>
+                        <div class="text-center">
+                            <a href="{% url 'reenviar_codigo' usuario.id %}" class="btn btn-outline-primary">Reenviar código</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (opcional si usas modales u otros componentes interactivos) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% if messages %}
+      {% for mensaje in messages %}
+        <script>
+            swal({
+              title: "MENSAJE",
+              text: "{{ mensaje }}",
+              icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}",
+            });
+        </script>
+      {% endfor %}
+    {% endif %}
+
+</body>
+</html>

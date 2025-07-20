@@ -1,0 +1,91 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-success">Pagos Realizados</h1>
+    <hr>
+
+    <a href="{% url 'registrar_pago' %}" class="btn btn-success mb-3">
+        <i class="fa fa-plus"></i> Realizar Nuevo Pago
+    </a>
+
+    {% if pagos %}
+    <table class="table table-bordered table-striped table-hover" id="tbl_pagos">
+        <thead class="table-success">
+            <tr>
+                <th>ID</th>
+                <th>Contrato</th>
+                <th>Artista</th>
+                <th>Monto</th>
+                <th>Fecha de Pago</th>
+                <th>Comprobante</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos %}
+            <tr>
+                <td>{{ pago.id }}</td>
+                <td>{{ pago.contrato }}</td>
+                <td>{{ pago.artista.username }}</td>
+                <td>${{ pago.monto }}</td>
+                <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                <td>
+                    {% if pago.comprobante_imagen %}
+                        <img src="{{ pago.comprobante_imagen.url }}" alt="Comprobante pago" height="80px" style="object-fit: contain; border:1px solid #ccc; padding:2px;">
+                    {% else %}
+                        Ninguno
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="{% url 'editar_pago' pago.id %}" class="btn btn-outline-warning">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <button onclick="confirmarEliminacion('{{ pago.id }}')" class="btn btn-outline-danger">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center">No hay pagos registrados.</p>
+    {% endif %}
+</div>
+
+<script>
+function confirmarEliminacion(id) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¡Esta acción eliminará el pago permanentemente!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "{% url 'eliminar_pago' 0 %}".replace('0', id);
+        }
+    });
+}
+</script>
+
+<script>
+  $('#tbl_pagos').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+</script>
+
+<br><br><br>
+{% endblock %}

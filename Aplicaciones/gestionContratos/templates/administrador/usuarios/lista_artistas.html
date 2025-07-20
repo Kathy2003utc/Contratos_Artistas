@@ -1,0 +1,51 @@
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary">Artistas Registrados</h2>
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Foto</th>
+                <th>Usuario</th>
+                <th>Nombre completo</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Redes</th>
+                <th>Verificado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for artista in artistas %}
+            <tr>
+                <td>
+                    {% if artista.foto_perfil %}
+                        <img src="{{ artista.foto_perfil.url }}" alt="Foto" width="50" height="50" class="rounded-circle" style="object-fit: cover;">
+                    {% else %}
+                        Sin foto
+                    {% endif %}
+                </td>
+                <td>{{ artista.username }}</td>
+                <td>{{ artista.first_name }} {{ artista.last_name }}</td>
+                <td>{{ artista.email }}</td>
+                <td>{{ artista.telefono }}</td>
+                <td>
+                    {% if artista.facebook_url %}
+                        <a href="{{ artista.facebook_url }}" target="_blank">Facebook</a><br>
+                    {% endif %}
+                    {% if artista.x_url %}
+                        <a href="{{ artista.x_url }}" target="_blank">X</a><br>
+                    {% endif %}
+                    {% if artista.web_url %}
+                        <a href="{{ artista.web_url }}" target="_blank">Web</a>
+                    {% endif %}
+                </td>
+                <td>{% if artista.verificado %}✅{% else %}❌{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

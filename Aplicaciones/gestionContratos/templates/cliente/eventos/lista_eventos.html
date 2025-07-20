@@ -1,0 +1,79 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container mt-5">
+    <h1 class="text-center text-success">Listado de Eventos</h1>
+    <hr>
+
+    <a href="{% url 'crear_evento' %}" class="btn btn-success mb-3">
+        <i class="fa fa-plus"></i> Crear Evento
+    </a>
+
+    <table class="table table-bordered table-striped table-hover" id="tbl_evento">
+        <thead class="table-success">
+            <tr>
+                <th>ID</th>
+                <th>TÍTULO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>FECHA</th>
+                <th>UBICACIÓN</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evento in eventos %}
+            <tr>
+                <td>{{ evento.id }}</td>
+                <td>{{ evento.titulo }}</td>
+                <td>{{ evento.descripcion|truncatechars:40 }}</td>
+                <td>{{ evento.fecha|date:"d/m/Y" }}</td>
+                <td>{{ evento.ubicacion }}</td>
+                <td>
+                    <a href="{% url 'editar_evento' evento.id %}" class="btn btn-outline-warning">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <button onclick="confirmarEliminacion('{{ evento.id }}')" class="btn btn-outline-danger">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function confirmarEliminacion(id) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¡Esta acción no se puede deshacer!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "{% url 'eliminar_evento' 0 %}".replace('0', id);
+        }
+    });
+}
+</script>
+
+<script>
+  $('#tbl_evento').DataTable({
+      dom: 'Bfrtip',
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+
+      language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+  });
+
+</script>
+{% endblock %}
+

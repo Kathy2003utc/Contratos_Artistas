@@ -1,0 +1,73 @@
+{% extends 'administrador/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+
+<div class="container">
+    <h2 class="text-center text-primary mb-4">Términos y Condiciones</h2>
+
+    <!-- Botón para agregar nuevo término -->
+    <div class="text-center mb-4">
+        <a href="{% url 'crear_terminos' %}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Agregar Nuevo Término
+        </a>
+    </div>
+
+    {% if terminos %}
+        <div class="row justify-content-center">
+            {% for termino in terminos %}
+                <div class="col-md-10 mb-4">
+                    <div class="card shadow-sm border-primary">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <strong>Versión:</strong> {{ termino.version }}
+                            <div>
+                                <a href="{% url 'editar_terminos' termino.id %}" class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="fa fa-pen"></i>
+                                </a>
+                                <button onclick="confirmarEliminacion('{{ termino.id }}')" class="btn btn-sm btn-danger" title="Eliminar">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p style="white-space: pre-wrap;">{{ termino.texto }}</p>
+                        </div>
+                        <div class="card-footer bg-light text-center text-muted small">
+                            <div><i class="fa fa-calendar-plus me-1"></i>Publicado: {{ termino.fecha_publicacion|date:"d/m/Y H:i" }}</div>
+                            {% if termino.fecha_modificacion %}
+                                <div><i class="fa fa-edit me-1"></i>Editado: {{ termino.fecha_modificacion|date:"d/m/Y H:i" }}</div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No hay términos y condiciones registrados.</p>
+    {% endif %}
+</div>
+
+<!-- Alerta de confirmación -->
+<script>
+function confirmarEliminacion(id) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¡Esta acción eliminará el término y condición permanentemente!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "{% url 'eliminar_terminos' 0 %}".replace('0', id);
+        }
+    });
+}
+</script>
+
+<br><br><br>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'artista/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<br><br><br>
+<!-- Fondo con degradado -->
+<style>
+    body {
+        background: linear-gradient(to right, #f3e5f5, #e8f5e9);
+    }
+</style>
+
+<div class="container my-5">
+
+    <!-- Encabezado -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">🎶 ¡Hola, {{ user.first_name|default:"Artista" }}!</h1>
+        <p class="lead text-secondary">Bienvenido a tu panel de gestión. Aquí puedes administrar tus presentaciones y perfil.</p>
+    </div>
+
+    <!-- Tarjeta de acciones -->
+    <div class="card mx-auto shadow-lg border-0" style="max-width: 700px; border-radius: 1rem;">
+        <div class="card-header bg-primary text-white text-center" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <h4 class="mb-0"><i class="bi bi-music-note-beamed"></i> Opciones disponibles para ti</h4>
+        </div>
+        <div class="card-body bg-white">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-calendar-event-fill text-primary me-3 fs-4"></i>
+                    <span><strong>Ver eventos asignados:</strong> Consulta fechas, lugares y detalles de tus presentaciones.</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-file-earmark-check-fill text-primary me-3 fs-4"></i>
+                    <span><strong>Revisar contratos:</strong> Visualiza acuerdos realizados con los clientes.</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-person-circle text-primary me-3 fs-4"></i>
+                    <span><strong>Editar tu perfil:</strong> Mantén tu información profesional actualizada.</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-box-arrow-right text-danger me-3 fs-4"></i>
+                    <span><strong>Cerrar sesión:</strong> Sal de forma segura del sistema.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

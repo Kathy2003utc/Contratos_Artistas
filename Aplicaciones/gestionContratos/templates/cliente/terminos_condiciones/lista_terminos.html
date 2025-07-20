@@ -1,0 +1,33 @@
+{% extends 'cliente/plantilla.html' %}
+{% load static %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary">Términos y Condiciones</h2>
+    
+    {% if terminos %}
+        <div class="row justify-content-center">
+            {% for termino in terminos %}
+                <div class="col-md-10 mb-4">
+                    <div class="card border-primary shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            Versión: {{ termino.version }}
+                        </div>
+                        <div class="card-body">
+                            <p style="white-space: pre-wrap;">{{ termino.texto }}</p>
+                        </div>
+                        <div class="card-footer bg-light text-muted small text-center">
+                            Publicado: {{ termino.fecha_publicacion|date:"d/m/Y H:i" }}
+                            {% if termino.fecha_modificacion %}
+                                | Editado: {{ termino.fecha_modificacion|date:"d/m/Y H:i" }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No hay términos y condiciones registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}
