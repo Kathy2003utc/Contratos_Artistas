@@ -4,7 +4,7 @@
 <div class="container mt-4">
   <h3 class="mb-4">Nuevo Mensaje</h3>
 
-  <form method="post">
+  <form id="frm_nuevo_mensaje_artista" method="post">
     {% csrf_token %}
     <div class="mb-3">
         <label for="receptor" class="form-label">Receptor:</label>
@@ -20,5 +20,25 @@
     <a href="{% url 'artista_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>
+
+<script>
+  $("#frm_nuevo_mensaje_artista").validate({
+    rules: {
+      texto: {
+        required: true,
+        minlength: 3,
+        maxlength: 1000
+      }
+    },
+    messages: {
+      texto: {
+        required: "El mensaje es obligatorio",
+        minlength: "Ingrese al menos 3 caracteres",
+        maxlength: "Máximo 1000 caracteres permitidos"
+      }
+    },
+   
+  });
+</script>
 <br><br><br>
 {% endblock %}
