@@ -5,13 +5,13 @@
 <div class="container">
     <h2 class="mb-4">Editar Pago</h2>
 
-    <form method="post" enctype="multipart/form-data">
+    <form id="frm_editar_pago" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Selección del contrato -->
         <div class="mb-3">
             <label for="contrato">Contrato:</label>
-            <select name="contrato" id="contrato" class="form-control" required onchange="autocompletarMonto()">
+            <select name="contrato" id="contrato" class="form-control" onchange="autocompletarMonto()">
                 <option value="">-- Selecciona un contrato --</option>
                 {% for c in contratos %}
                     <option value="{{ c.id }}" 
@@ -33,7 +33,7 @@
         <!-- Monto del contrato -->
         <div class="mb-3">
             <label>Monto:</label>
-            <input type="number" name="monto" id="monto" step="0.01" class="form-control" readonly required>
+            <input type="number" name="monto" id="monto" step="0.01" class="form-control" readonly>
         </div>
 
         <!-- Comprobante de pago -->
@@ -66,6 +66,25 @@ function autocompletarMonto() {
 
 // Cargar valores del contrato actual al cargar la página
 document.addEventListener('DOMContentLoaded', autocompletarMonto);
+
+$("#frm_editar_pago").validate({
+    rules: {
+        contrato: {
+            required: true
+        },
+        comprobante_imagen: {
+            extension: "jpg|jpeg|png|gif|bmp|webp"
+        }
+    },
+    messages: {
+        contrato: {
+            required: "Por favor selecciona un contrato"
+        },
+        comprobante_imagen: {
+            extension: "Solo se permiten imágenes (jpg, jpeg, png, gif, bmp, webp)"
+        }
+    },
+});
 </script>
 
 {% endblock %}

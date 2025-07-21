@@ -5,13 +5,13 @@
 <div class="container">
     <h2 class="mb-4">Registrar Pago</h2>
 
-    <form method="post" enctype="multipart/form-data">
+    <form id="frm_registrar_pago" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Selección del contrato aceptado -->
         <div class="mb-3">
             <label for="contrato">Contrato:</label>
-            <select name="contrato" id="contrato" class="form-control" required onchange="autocompletarMonto()">
+            <select name="contrato" id="contrato" class="form-control" onchange="autocompletarMonto()">
                 <option value="">-- Selecciona un contrato --</option>
                 {% for c in contratos %}
                     <option value="{{ c.id }}" data-costo="{{ c.costo|floatformat:2 }}" data-artista="{{ c.artista.get_full_name }}">
@@ -30,13 +30,13 @@
         <!-- Monto autocompletado y solo lectura -->
         <div class="mb-3">
             <label>Monto:</label>
-            <input type="number" name="monto" id="monto" step="0.01" class="form-control" readonly required>
+            <input type="number" name="monto" id="monto" step="0.01" class="form-control" readonly>
         </div>
 
         <!-- Comprobante obligatorio -->
         <div class="mb-3">
             <label>Comprobante de pago (obligatorio):</label>
-            <input type="file" name="comprobante_imagen" accept="image/*" class="form-control" required>
+            <input type="file" name="comprobante_imagen" accept="image/*" class="form-control">
         </div>
 
         <button type="submit" class="btn btn-primary">Registrar Pago</button>
@@ -53,6 +53,27 @@ function autocompletarMonto() {
     document.getElementById('artista_nombre').value = artista;
     document.getElementById('monto').value          = costo;
 }
+
+$("#frm_registrar_pago").validate({
+    rules: {
+        contrato: {
+            required: true,
+        },
+        comprobante_imagen: {
+            required: true,
+            extension: "jpg|jpeg|png|gif|bmp|webp"
+        }
+    },
+    messages: {
+        contrato: {
+            required: "Por favor selecciona un contrato"
+        },
+        comprobante_imagen: {
+            required: "Por favor sube un comprobante de pago",
+            extension: "Solo se permiten imágenes (jpg, jpeg, png, gif, bmp, webp)"
+        }
+    },
+});
 </script>
 
 {% endblock %}
