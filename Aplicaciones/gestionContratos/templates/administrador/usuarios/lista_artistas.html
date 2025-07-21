@@ -5,8 +5,8 @@
 <br><br><br>
 <div class="container mt-5">
     <h2 class="mb-4 text-center text-primary">Artistas Registrados</h2>
-    <table class="table table-bordered table-hover table-striped">
-        <thead class="table-dark">
+    <table class="table table-bordered table-hover table-striped" id="tbl_artistas">
+        <thead class="table-primary">
             <tr>
                 <th>Foto</th>
                 <th>Usuario</th>
@@ -48,4 +48,16 @@
         </tbody>
     </table>
 </div>
+
+<!-- DataTables JS + configuración -->
+<script>
+  $('#tbl_artistas').DataTable({
+    dom: 'Bfrtip',
+    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    language: {
+      url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+    }
+  });
+</script>
+<br><br><br>
 {% endblock %}
