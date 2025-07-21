@@ -11,33 +11,33 @@
                 <h4 class="mb-0">Editar Perfil</h4>
             </div>
             <div class="card-body">
-                <form method="post" enctype="multipart/form-data">
+                <form id="frm_editar_perfil_cliente" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="first_name" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" required/>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" />
                     </div>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Apellido:</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" required/>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" />
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required/>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" />
                     </div>
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono:</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}"/>
+                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" />
                     </div>
                     <div class="mb-3">
                         <label for="direccion" class="form-label">Dirección:</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}"/>
+                        <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}" />
                     </div>
                     <div class="mb-3">
                         <label for="foto_perfil" class="form-label">Foto de Perfil:</label>
                         <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" />
                         {% if usuario.foto_perfil %}
-                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-thumbnail mt-2" style="max-width: 150px;"/>
+                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-thumbnail mt-2" style="max-width: 150px;" />
                         {% endif %}
                     </div>
                     <button type="submit" class="btn btn-success">Guardar Cambios</button>
@@ -47,7 +47,6 @@
         </div>
     </div>
 
-
 <script>
     $("#foto_perfil").fileinput({
         language: "es",
@@ -55,6 +54,64 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false
+    });
+
+    $("#frm_editar_perfil_cliente").validate({
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 50
+            },
+            last_name: {
+                required: true,
+                minlength: 2,
+                maxlength: 50
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            telefono: {
+                minlength: 7,
+                maxlength: 15,
+                digits: true
+            },
+            direccion: {
+                maxlength: 150
+            },
+            foto_perfil: {
+                extension: "png|jpg|jpeg"
+            }
+        },
+        messages: {
+            first_name: {
+                required: "El nombre es obligatorio",
+                minlength: "Al menos 2 caracteres",
+                maxlength: "Máximo 50 caracteres"
+            },
+            last_name: {
+                required: "El apellido es obligatorio",
+                minlength: "Al menos 2 caracteres",
+                maxlength: "Máximo 50 caracteres"
+            },
+            email: {
+                required: "El email es obligatorio",
+                email: "Ingrese un email válido"
+            },
+            telefono: {
+                minlength: "Mínimo 7 dígitos",
+                maxlength: "Máximo 15 dígitos",
+                digits: "Solo números"
+            },
+            direccion: {
+                maxlength: "Máximo 150 caracteres"
+            },
+            foto_perfil: {
+                extension: "Solo se permiten imágenes (png, jpg, jpeg)"
+            }
+        },
+        
     });
 </script>
 
