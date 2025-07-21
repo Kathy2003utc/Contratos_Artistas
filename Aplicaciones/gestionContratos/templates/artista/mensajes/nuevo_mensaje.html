@@ -1,23 +1,26 @@
 {% extends 'artista/plantilla.html' %}
 {% block contenido %}
 <br><br><br>
-<div class="container mt-4">
-  <h3 class="mb-4">Nuevo Mensaje</h3>
+
+<div class="container mt-5" style="max-width: 700px;">
+  <h3 class="text-center mb-4">Nuevo Mensaje</h3>
 
   <form id="frm_nuevo_mensaje_artista" method="post">
     {% csrf_token %}
+
     <div class="mb-3">
-        <label for="receptor" class="form-label">Receptor:</label>
-        <input type="text" class="form-control" value="Administrador" disabled>
-        <input type="hidden" name="receptor" value="{{ usuario.id }}">
+      <label for="receptor" class="form-label">Receptor:</label>
+      <input type="text" class="form-control" value="Administrador" disabled>
+      <input type="hidden" name="receptor" value="{{ usuario.id }}">
     </div>
-    
+
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>
       <textarea name="texto" id="texto" class="form-control" rows="5" required></textarea>
     </div>
+
     <button type="submit" class="btn btn-primary">Enviar</button>
-    <a href="{% url 'artista_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
+    <a href="{% url 'artista_listar_mensajes' %}" class="btn btn-secondary ms-2">Cancelar</a>
   </form>
 </div>
 
@@ -36,9 +39,9 @@
         minlength: "Ingrese al menos 3 caracteres",
         maxlength: "Máximo 1000 caracteres permitidos"
       }
-    },
-   
+    }
   });
 </script>
+
 <br><br><br>
 {% endblock %}

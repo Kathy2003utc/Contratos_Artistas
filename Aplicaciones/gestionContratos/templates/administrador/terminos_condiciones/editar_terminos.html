@@ -4,28 +4,50 @@
 {% block contenido %}
 <br><br><br>
 
-<div class="container mt-5">
-    <h1 class="text-center text-primary">Editar Término y Condición</h1>
+<style>
+  body {
+    background: #f5f6fa;
+  }
+  .form-card {
+    max-width: 600px;
+    margin: 80px auto 60px auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    padding: 30px 40px;
+  }
+  .btn-rounded {
+    border-radius: 25px;
+    padding: 10px 20px;
+  }
+</style>
+
+<div class="container">
+  <div class="form-card">
+    <h1 class="text-center text-primary mb-3">Editar Término y Condición</h1>
     <hr>
 
-    <form method="POST" action="">
-        {% csrf_token %}
+    <form method="POST" action="" class="mx-auto" style="max-width: 600px;">
+      {% csrf_token %}
 
-        <div class="mb-3">
-            <label for="version" class="form-label">Versión</label>
-            <input type="text" class="form-control" id="version" name="version" value="{{ termino.version }}" required>
-        </div>
+      <div class="mb-3">
+        <label for="version" class="form-label">Versión</label>
+        <input type="text" class="form-control" id="version" name="version" value="{{ termino.version }}" required>
+      </div>
 
-        <div class="mb-3">
-            <label for="texto" class="form-label">Texto</label>
-            <textarea class="form-control" id="texto" name="texto" rows="8" required>{{ termino.texto }}</textarea>
-        </div>
+      <div class="mb-3">
+        <label for="texto" class="form-label">Texto</label>
+        <textarea class="form-control" id="texto" name="texto" rows="8" required>{{ termino.texto }}</textarea>
+      </div>
 
-        <button type="submit" class="btn btn-primary">
-            <i class="fa fa-save"></i> Guardar Cambios
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button type="submit" class="btn btn-primary btn-rounded px-4">
+          <i class="fa fa-save"></i> Guardar Cambios
         </button>
-        <a href="{% url 'listar_terminos' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'listar_terminos' %}" class="btn btn-secondary btn-rounded px-4">Cancelar</a>
+      </div>
     </form>
+  </div>
 </div>
 
 <br><br><br>

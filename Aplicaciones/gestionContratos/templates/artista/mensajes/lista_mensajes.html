@@ -68,7 +68,7 @@ function confirmarEliminacion(e) {
     });
 }
 
-$(document).ready(function() {
+
   $('#tbl_mensajes').DataTable({
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
@@ -76,8 +76,6 @@ $(document).ready(function() {
           url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
       }
   });
-});
 </script>
-
 <br><br><br>
 {% endblock %}

@@ -2,29 +2,85 @@
 {% load static %}
 
 {% block contenido %}
-<br><br><br>
+<style>
+    body {
+        background: #f5f6fa;
+    }
 
-<div class="container mt-5">
-  <h1 class="text-center text-success">Perfil del Administrador</h1>
-  <hr>
-  <div class="card mx-auto" style="max-width: 600px;">
-    <div class="card-body">
-      <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
-      <p><strong>Username:</strong> {{ usuario.username }}</p>
-      <p><strong>Email:</strong> {{ usuario.email }}</p>
-      <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-      <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+    .profile-card {
+        max-width: 600px;
+        margin: 100px auto;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        padding-top: 130px;
+        padding-bottom: 30px;
+    }
 
-      {% if usuario.foto_perfil %}
-      <p><strong>Foto de perfil:</strong><br>
-        <img src="{{ usuario.foto_perfil.url }}" class="img-thumbnail mt-2" width="200">
-      </p>
-      {% endif %}
+    .profile-image-container {
+        position: absolute;
+        top: -75px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        border-radius: 50%;
+        padding: 5px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
 
-      <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar perfil</a>
-      <a href="{% url 'dashboard_administrador' %}" class="btn btn-secondary ms-2">Volver</a>
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .btn-rounded {
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+
+    .btn-w-45 {
+        width: 48%;
+    }
+
+    .text-muted {
+        font-size: 14px;
+        color: #6c757d !important;
+    }
+</style>
+
+<div class="container text-center">
+    <div class="profile-card">
+
+        <!-- Imagen -->
+        <div class="profile-image-container">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="profile-image">
+            {% else %}
+                <img src="{% static 'default-profile.png' %}" alt="Foto por defecto" class="profile-image">
+            {% endif %}
+        </div>
+
+        <!-- Info básica -->
+        <h4 class="mt-3">{{ usuario.first_name }} {{ usuario.last_name }}</h4>
+        <p class="text-muted mb-1">{{ usuario.email }}</p>
+
+        <!-- Info detallada -->
+        <div class="text-start px-4 mt-4">
+            <p><strong>👤 Usuario:</strong> {{ usuario.username }}</p>
+            <p><strong>📞 Teléfono:</strong> {{ usuario.telefono }}</p>
+            <p><strong>🏠 Dirección:</strong> {{ usuario.direccion }}</p>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-between mt-4 px-4">
+            <a href="{% url 'editar_perfil' %}" class="btn btn-warning btn-rounded btn-w-45">Editar Perfil</a>
+            <a href="{% url 'dashboard_administrador' %}" class="btn btn-secondary btn-rounded btn-w-45">Volver</a>
+        </div>
     </div>
-  </div>
 </div>
 
 <br><br><br>

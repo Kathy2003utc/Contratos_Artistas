@@ -2,16 +2,17 @@
 {% load static %}
 
 {% block contenido %}
-<div class="container">
-    <h2 class="mb-4">Editar Pago</h2>
+<br><br><br>
 
-    <form id="frm_editar_pago" method="post" enctype="multipart/form-data">
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Editar Pago</h2>
+    <form id="frm_editar_pago" method="post" enctype="multipart/form-data" class="mx-auto" style="max-width: 600px;">
         {% csrf_token %}
 
         <!-- Selección del contrato -->
         <div class="mb-3">
-            <label for="contrato">Contrato:</label>
-            <select name="contrato" id="contrato" class="form-control" onchange="autocompletarMonto()">
+            <label for="contrato" class="form-label">Contrato:</label>
+            <select name="contrato" id="contrato" class="form-select" onchange="autocompletarMonto()" required>
                 <option value="">-- Selecciona un contrato --</option>
                 {% for c in contratos %}
                     <option value="{{ c.id }}" 
@@ -26,45 +27,47 @@
 
         <!-- Artista asociado -->
         <div class="mb-3">
-            <label>Artista:</label>
+            <label for="artista_nombre" class="form-label">Artista:</label>
             <input type="text" id="artista_nombre" class="form-control" readonly>
         </div>
 
         <!-- Monto del contrato -->
         <div class="mb-3">
-            <label>Monto:</label>
+            <label for="monto" class="form-label">Monto:</label>
             <input type="number" name="monto" id="monto" step="0.01" class="form-control" readonly>
         </div>
 
-        <!-- Comprobante de pago -->
+        <!-- Comprobante de pago actual -->
         <div class="mb-3">
-            <label>Comprobante actual:</label><br>
+            <label class="form-label">Comprobante actual:</label><br>
             <a href="{{ pago.comprobante_imagen.url }}" target="_blank" class="btn btn-outline-info btn-sm">
                 Ver Comprobante Actual
             </a>
         </div>
 
+        <!-- Subir nuevo comprobante -->
         <div class="mb-3">
-            <label>Subir nuevo comprobante (opcional):</label>
-            <input type="file" name="comprobante_imagen" accept="image/*" class="form-control">
+            <label for="comprobante_imagen" class="form-label">Subir nuevo comprobante:</label>
+            <input type="file" name="comprobante_imagen" id="comprobante_imagen" accept="image/*" class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a href="{% url 'listar_pagos' %}" class="btn btn-secondary">Cancelar</a>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <button type="submit" class="btn btn-primary btn-rounded px-4">Guardar Cambios</button>
+            <a href="{% url 'listar_pagos' %}" class="btn btn-secondary btn-rounded px-4">Cancelar</a>
+        </div>
     </form>
 </div>
 
 <script>
 function autocompletarMonto() {
-    const sel      = document.getElementById('contrato');
-    const artista  = sel.options[sel.selectedIndex].getAttribute('data-artista') || '';
-    const costo    = sel.options[sel.selectedIndex].getAttribute('data-costo')   || '';
+    const sel = document.getElementById('contrato');
+    const artista = sel.options[sel.selectedIndex]?.getAttribute('data-artista') || '';
+    const costo = sel.options[sel.selectedIndex]?.getAttribute('data-costo') || '';
 
     document.getElementById('artista_nombre').value = artista;
-    document.getElementById('monto').value          = costo;
+    document.getElementById('monto').value = costo;
 }
 
-// Cargar valores del contrato actual al cargar la página
 document.addEventListener('DOMContentLoaded', autocompletarMonto);
 
 $("#frm_editar_pago").validate({
@@ -87,4 +90,19 @@ $("#frm_editar_pago").validate({
 });
 </script>
 
+<script>
+    $("#comprobante_imagen").fileinput({
+        language: "es",
+        allowedFileExtensions: ["png", "jpg", "jpeg"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
+
+<style>
+    .btn-rounded {
+        border-radius: 25px;
+    }
+</style>
 {% endblock %}

@@ -2,23 +2,147 @@
 {% load static %}
 
 {% block contenido %}
+<style>
+  body {
+    background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+    min-height: 100vh;
+  }
+  .admin-container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .dashboard-header {
+    font-weight: 700;
+  }
+  .card-metric {
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  .card-metric:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+  }
+  .bg-primary-soft {
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+  .bg-success-soft {
+    background-color: rgba(25, 135, 84, 0.1);
+  }
+  .bg-warning-soft {
+    background-color: rgba(255, 193, 7, 0.1);
+  }
+</style>
+
 <br><br><br>
 
-<div class="container mt-5">
-  <h1 class="text-center text-primary">Panel del Administrador</h1>
-  <hr>
-  <div class="card">
+<div class="admin-container my-5">
+
+  <!-- Título -->
+  <div class="text-center mb-5">
+    <h1 class="dashboard-header text-primary display-4">Panel del Administrador</h1>
+    <p class="lead text-secondary">{{ mensaje }}</p>
+  </div>
+
+  <!-- Mensajes de alerta -->
+  {% if messages %}
+  <div class="mb-4">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Métricas -->
+  <div class="d-flex justify-content-between flex-wrap text-center mb-5">
+    <div class="card card-metric p-4 mb-3 flex-fill mx-2" style="min-width: 250px;">
+      <div class="icon-circle bg-primary-soft mx-auto mb-3">
+        <i class="bi bi-people-fill text-primary"></i>
+      </div>
+      <h2 class="text-primary fw-bold">{{ total_usuarios }}</h2>
+      <p class="mb-0 text-muted">Usuarios registrados</p>
+    </div>
+
+    <div class="card card-metric p-4 mb-3 flex-fill mx-2" style="min-width: 250px;">
+      <div class="icon-circle bg-success-soft mx-auto mb-3">
+        <i class="bi bi-calendar-event-fill text-success"></i>
+      </div>
+      <h2 class="text-success fw-bold">{{ total_eventos }}</h2>
+      <p class="mb-0 text-muted">Eventos activos</p>
+    </div>
+
+    <div class="card card-metric p-4 mb-3 flex-fill mx-2" style="min-width: 250px;">
+      <div class="icon-circle bg-warning-soft mx-auto mb-3">
+        <i class="bi bi-file-earmark-text-fill text-warning"></i>
+      </div>
+      <h2 class="text-warning fw-bold">{{ total_contratos }}</h2>
+      <p class="mb-0 text-muted">Total de Contratos</p>
+    </div>
+  </div>
+
+  <!-- Funcionalidades -->
+  <div class="card shadow-lg rounded-4 mb-5">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h5 class="mb-0">Funcionalidades Principales</h5>
+    </div>
     <div class="card-body">
-      <ul class="list-group">
-        <li class="list-group-item">👤 Gestionar usuarios (Clientes, Artistas)</li>
-        <li class="list-group-item">📅 Supervisar eventos registrados</li>
-        <li class="list-group-item">📄 Ver contratos entre clientes y artistas</li>
-        <li class="list-group-item">💬 Ver mensajes enviados entre usuarios</li>
-        <li class="list-group-item">⭐ Revisar reseñas de artistas</li>
-        <li class="list-group-item">💰 Validar pagos y comprobantes</li>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-person-badge-fill text-primary fs-4 me-3"></i>
+          Gestionar usuarios (Clientes, Artistas): crear, editar o bloquear cuentas.
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-calendar2-event-fill text-success fs-4 me-3"></i>
+          Supervisar eventos registrados: revisar fechas, ubicaciones y detalles.
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-file-text-fill text-warning fs-4 me-3"></i>
+          Ver contratos: controlar estado y documentación firmada.
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-chat-dots-fill text-info fs-4 me-3"></i>
+          Ver mensajes entre usuarios para atención y soporte.
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-star-fill text-danger fs-4 me-3"></i>
+          Revisar reseñas de artistas para evaluar desempeño.
+        </li>
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-currency-dollar text-success fs-4 me-3"></i>
+          Validar pagos y comprobantes para asegurar transacciones.
+        </li>
       </ul>
     </div>
   </div>
+
+  <!-- Resumen general -->
+  <div class="card shadow-sm rounded-4">
+    <div class="card-header bg-secondary text-white rounded-top-4">
+      <h5 class="mb-0">Resumen General</h5>
+    </div>
+    <div class="card-body">
+      <p class="mb-3">
+        Este panel centraliza la gestión integral de usuarios, eventos y contratos, facilitando el control administrativo y operativo de la plataforma.
+      </p>
+      <p class="mb-0">
+        Mantén actualizados los datos y supervisa las interacciones para garantizar una experiencia óptima para clientes y artistas.
+      </p>
+    </div>
+  </div>
+
 </div>
 
 <br><br><br>

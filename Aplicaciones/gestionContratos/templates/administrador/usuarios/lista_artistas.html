@@ -8,6 +8,7 @@
     <table class="table table-bordered table-hover table-striped" id="tbl_artistas">
         <thead class="table-primary">
             <tr>
+                <th>ID</th>
                 <th>Foto</th>
                 <th>Usuario</th>
                 <th>Nombre completo</th>
@@ -20,6 +21,7 @@
         <tbody>
             {% for artista in artistas %}
             <tr>
+                <td>{{ artista.id }}</td>
                 <td>
                     {% if artista.foto_perfil %}
                         <img src="{{ artista.foto_perfil.url }}" alt="Foto" width="50" height="50" class="rounded-circle" style="object-fit: cover;">

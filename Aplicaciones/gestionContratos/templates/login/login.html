@@ -1,104 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Iniciar sesión</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Iniciar sesión</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <!-- jQuery Validate -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+  <!-- jQuery Validate -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    <!-- SweetAlert2 -->
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <style>
-        body {
-            background: linear-gradient(to right, #4e73df, #224abe);
-        }
-        .login-card {
-            border: none;
-            border-radius: 1rem;
-            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
-        }
-        .bg-login-image {
-            background: url('https://source.unsplash.com/random/600x800');
-            background-position: center;
-            background-size: cover;
-        }
+  <style>
+    /* Fondo con gradiente animado */
+    body {
+        height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(-45deg, #1e3c72, #2a5298, #6dd5fa, #2980b9);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
 
-        /* Mensajes de error en rojo */
-        label.error {
-            color: #ff4d4d;
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
-            display: block;
-        }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
-        input.error {
-            border-color: #ff4d4d;
-            background-color: #ffe6e6;
-        }
-    </style>
+    .login-container {
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .login-card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      background-color: white;
+    }
+
+    .bg-login-image {
+      background: url('https://img.freepik.com/vector-premium/dibujo-colorido-lapiz-lapic-medio_339976-59909.jpg') no-repeat center;
+      background-size: cover;
+      height: 100%;
+    }
+
+    label.error {
+      color: #ff4d4d;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    input.error {
+      border-color: #ff4d4d;
+      background-color: #ffe6e6;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-            <div class="card login-card">
-                <div class="row g-0">
-                    <!-- Imagen lateral -->
-                    <div class="col-md-6 d-none d-md-block bg-login-image"></div>
-
-                    <!-- Formulario -->
-                    <div class="col-md-6">
-                        <div class="card-body p-4">
-                            <div class="text-center mb-4">
-                                <h2 class="text-primary fw-bold">Bienvenido</h2>
-                                <p class="text-muted">Inicia sesión para continuar</p>
-                            </div>
-
-                            <form id="frm_login" method="post" action="{% url 'iniciar_sesion' %}">
-                                {% csrf_token %}
-
-                                {% if form.errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                        Usuario o contraseña incorrectos.
-                                    </div>
-                                {% endif %}
-
-                                <div class="form-group mb-3">
-                                    <label for="username">Usuario:</label>
-                                    <input type="text" name="username" class="form-control" placeholder="Ingrese solo el usuario" required>
-                                </div>
-
-                                <div class="form-group mb-4">
-                                    <label for="password">Contraseña:</label>
-                                    <input type="password" name="password" class="form-control" placeholder="Ingrese su Contraseña" required>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-                                </div>
-                            </form>
-
-                            <hr class="my-4">
-
-                            <div class="text-center mt-2">
-                                <a href="{% url 'registro' %}" class="text-decoration-none small">¿No tienes una cuenta? Regístrate aquí</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+  <div class="login-container">
+    <div class="card login-card">
+      <div class="row g-0" style="height: 100%;">
+        <!-- Imagen lateral -->
+        <div class="col-md-5 d-none d-md-block">
+          <div class="bg-login-image h-100 w-100"></div>
         </div>
-     </div>
+
+        <!-- Formulario -->
+        <div class="col-md-7">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <h3 class="text-primary fw-bold">Bienvenido</h3>
+              <p class="text-muted mb-0">Inicia sesión para continuar</p>
+            </div>
+
+            <form id="frm_login" method="post" action="{% url 'iniciar_sesion' %}">
+              {% csrf_token %}
+              {% if form.errors %}
+              <div class="alert alert-danger" role="alert">
+                Usuario o contraseña incorrectos.
+              </div>
+              {% endif %}
+
+              <div class="form-group mb-3">
+                <label for="username">Usuario:</label>
+                <input type="text" name="username" class="form-control" placeholder="Ingrese su usuario" required>
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="password">Contraseña:</label>
+                <input type="password" name="password" class="form-control" placeholder="Ingrese su contraseña" required>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+              </div>
+            </form>
+
+            <hr class="my-4">
+
+            <div class="text-center mt-2">
+              <a href="{% url 'registro' %}" class="text-decoration-none small">¿No tienes una cuenta? Regístrate aquí</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Bootstrap JS -->
@@ -106,32 +125,32 @@
 
 <!-- Validación con jQuery Validate -->
 <script>
-    $("#frm_login").validate({
-        rules: {
-            "username": {
-                required: true,
-                minlength: 3,
-                maxlength: 50
-            },
-            "password": {
-                required: true,
-                minlength: 3,
-                maxlength: 30
-            }
-        },
-        messages: {
-            "username": {
-                required: "Este campo es obligatorio",
-                minlength: "Debe tener al menos 3 caracteres",
-                maxlength: "Máximo 50 caracteres permitidos"
-            },
-            "password": {
-                required: "Este campo es obligatorio",
-                minlength: "Debe tener al menos 3 caracteres",
-                maxlength: "Máximo 30 caracteres permitidos"
-            }
-        }
-    });
+  $("#frm_login").validate({
+    rules: {
+      "username": {
+        required: true,
+        minlength: 3,
+        maxlength: 50
+      },
+      "password": {
+        required: true,
+        minlength: 3,
+        maxlength: 30
+      }
+    },
+    messages: {
+      "username": {
+        required: "Este campo es obligatorio",
+        minlength: "Debe tener al menos 3 caracteres",
+        maxlength: "Máximo 50 caracteres permitidos"
+      },
+      "password": {
+        required: "Este campo es obligatorio",
+        minlength: "Debe tener al menos 3 caracteres",
+        maxlength: "Máximo 30 caracteres permitidos"
+      }
+    }
+  });
 </script>
 
 {% if messages %}

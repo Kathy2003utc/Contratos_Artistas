@@ -3,49 +3,70 @@
 
 {% block contenido %}
 <br><br><br>
+<style>
+    body {
+        background: #f5f6fa;
+    }
+    .form-card {
+        max-width: 600px;
+        margin: 80px auto 60px auto;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        padding: 30px 40px;
+    }
+    .img-preview {
+        max-width: 150px;
+        border-radius: 12px;
+        margin-top: 10px;
+        object-fit: cover;
+    }
+    .btn-rounded {
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+</style>
 
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Editar Perfil</h4>
+<div class="container">
+    <div class="form-card">
+        <h3 class="mb-4 text-center text-primary">Editar Perfil</h3>
+        <form id="frm_editar_perfil_cliente" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="first_name" class="form-label">Nombre:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" />
             </div>
-            <div class="card-body">
-                <form id="frm_editar_perfil_cliente" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="first_name" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="last_name" class="form-label">Apellido:</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono:</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección:</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto_perfil" class="form-label">Foto de Perfil:</label>
-                        <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" />
-                        {% if usuario.foto_perfil %}
-                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-thumbnail mt-2" style="max-width: 150px;" />
-                        {% endif %}
-                    </div>
-                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    <a href="{% url 'ver_perfil' %}" class="btn btn-secondary ms-2">Cancelar</a>
-                </form>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Apellido:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" />
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" />
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" />
+            </div>
+            <div class="mb-3">
+                <label for="direccion" class="form-label">Dirección:</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}" />
+            </div>
+            <div class="mb-3">
+                <label for="foto_perfil" class="form-label">Foto de Perfil:</label>
+                <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" />
+                {% if usuario.foto_perfil %}
+                    <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="img-preview" />
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="submit" class="btn btn-success btn-rounded px-4">Guardar Cambios</button>
+                <a href="{% url 'ver_perfil' %}" class="btn btn-secondary btn-rounded px-4">Cancelar</a>
+            </div>
+        </form>
     </div>
+</div>
 
 <script>
     $("#foto_perfil").fileinput({
@@ -58,31 +79,12 @@
 
     $("#frm_editar_perfil_cliente").validate({
         rules: {
-            first_name: {
-                required: true,
-                minlength: 2,
-                maxlength: 50
-            },
-            last_name: {
-                required: true,
-                minlength: 2,
-                maxlength: 50
-            },
-            email: {
-                required: true,
-                email: true
-            },
-            telefono: {
-                minlength: 7,
-                maxlength: 15,
-                digits: true
-            },
-            direccion: {
-                maxlength: 150
-            },
-            foto_perfil: {
-                extension: "png|jpg|jpeg"
-            }
+            first_name: { required: true, minlength: 2, maxlength: 50 },
+            last_name: { required: true, minlength: 2, maxlength: 50 },
+            email: { required: true, email: true },
+            telefono: { minlength: 7, maxlength: 15, digits: true },
+            direccion: { maxlength: 150 },
+            foto_perfil: { extension: "png|jpg|jpeg" }
         },
         messages: {
             first_name: {
@@ -111,7 +113,6 @@
                 extension: "Solo se permiten imágenes (png, jpg, jpeg)"
             }
         },
-        
     });
 </script>
 

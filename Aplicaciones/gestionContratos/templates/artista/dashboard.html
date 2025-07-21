@@ -3,7 +3,7 @@
 
 {% block contenido %}
 <br><br><br>
-<!-- Fondo con degradado -->
+
 <style>
     body {
         background: linear-gradient(to right, #f3e5f5, #e8f5e9);
@@ -12,39 +12,40 @@
 
 <div class="container my-5">
 
-    <!-- Encabezado -->
+    <!-- Encabezado de bienvenida -->
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold text-primary">🎶 ¡Hola, {{ user.first_name|default:"Artista" }}!</h1>
-        <p class="lead text-secondary">Bienvenido a tu panel de gestión. Aquí puedes administrar tus presentaciones y perfil.</p>
+        <h1 class="display-5 fw-bold text-primary">🎤 ¡Hola, {{ user.first_name|default:"Artista" }}!</h1>
+        <p class="lead text-secondary">
+            Este es tu espacio personal. Desde aquí puedes administrar tus participaciones y mantener tu perfil al día.
+        </p>
     </div>
 
-    <!-- Tarjeta de acciones -->
+    <!-- Panel de acciones -->
     <div class="card mx-auto shadow-lg border-0" style="max-width: 700px; border-radius: 1rem;">
         <div class="card-header bg-primary text-white text-center" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-            <h4 class="mb-0"><i class="bi bi-music-note-beamed"></i> Opciones disponibles para ti</h4>
+            <h4 class="mb-0"><i class="bi bi-tools"></i> Acciones disponibles</h4>
         </div>
         <div class="card-body bg-white">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-calendar-event-fill text-primary me-3 fs-4"></i>
-                    <span><strong>Ver eventos asignados:</strong> Consulta fechas, lugares y detalles de tus presentaciones.</span>
+                    <i class="bi bi-calendar3 text-primary me-3 fs-4"></i>
+                    <span><strong>Eventos asignados:</strong> Revisa tus fechas y lugares de presentación.</span>
                 </li>
                 <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-file-earmark-check-fill text-primary me-3 fs-4"></i>
-                    <span><strong>Revisar contratos:</strong> Visualiza acuerdos realizados con los clientes.</span>
+                    <i class="bi bi-journal-check text-primary me-3 fs-4"></i>
+                    <span><strong>Contratos vigentes:</strong> Accede a los acuerdos firmados con los clientes.</span>
                 </li>
                 <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-person-circle text-primary me-3 fs-4"></i>
-                    <span><strong>Editar tu perfil:</strong> Mantén tu información profesional actualizada.</span>
+                    <i class="bi bi-person-lines-fill text-primary me-3 fs-4"></i>
+                    <span><strong>Actualizar perfil:</strong> Edita tus datos personales y profesionales.</span>
                 </li>
                 <li class="list-group-item d-flex align-items-center">
                     <i class="bi bi-box-arrow-right text-danger me-3 fs-4"></i>
-                    <span><strong>Cerrar sesión:</strong> Sal de forma segura del sistema.</span>
+                    <span><strong>Salir del sistema:</strong> Finaliza tu sesión de manera segura.</span>
                 </li>
             </ul>
         </div>
     </div>
+
 </div>
 {% endblock %}
-
-

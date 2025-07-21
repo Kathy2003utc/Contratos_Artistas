@@ -1,25 +1,27 @@
 {% extends 'cliente/plantilla.html' %}
 {% block contenido %}
+<br><br><br>
 
 <div class="container mt-5">
-  <h3 class="mb-4">Nuevo Mensaje</h3>
+  <h1 class="text-center text-primary">Nuevo Mensaje</h1>
+  <hr>
 
-  <form id="frm_nuevo_mensaje" method="post">
+  <form id="frm_nuevo_mensaje" method="post" class="mx-auto" style="max-width: 600px;">
     {% csrf_token %}
 
     <div class="mb-3">
-        <label for="receptor" class="form-label">Receptor:</label>
-        <input type="text" class="form-control" value="Administrador" disabled>
-        <input type="hidden" name="receptor" value="{{ mensaje.receptor.id }}">
+      <label for="receptor" class="form-label">Receptor:</label>
+      <input type="text" class="form-control" value="Administrador" disabled>
+      <input type="hidden" name="receptor" value="{{ mensaje.receptor.id }}">
     </div>
 
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>
-      <textarea name="texto" id="texto" class="form-control" rows="4"></textarea>
+      <textarea name="texto" id="texto" class="form-control" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar</button>
-    <a href="{% url 'cliente_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
+    <a href="{% url 'cliente_listar_mensajes' %}" class="btn btn-secondary ms-2">Cancelar</a>
   </form>
 </div>
 
@@ -38,7 +40,7 @@
         minlength: "El mensaje debe tener al menos 5 caracteres",
         maxlength: "El mensaje no puede exceder 1000 caracteres"
       }
-    },
+    }
   });
 </script>
 

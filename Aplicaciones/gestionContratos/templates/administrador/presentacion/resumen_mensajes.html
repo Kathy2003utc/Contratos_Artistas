@@ -1,46 +1,166 @@
 {% extends 'administrador/plantilla.html' %}
 {% load static %}
 {% block contenido %}
-<div class="container mt-4">
-    <h2 class="mb-4">Resumen de Mensajes Enviados por Rol</h2>
-    <div id="data" data-clientes="{{ total_clientes|default:0 }}" data-artistas="{{ total_artistas|default:0 }}"></div>
-    <canvas id="graficoMensajes" width="400" height="200"></canvas>
+<div class="container my-5">
+  <h2 class="mb-5 text-center">Resumen de Actividad</h2>
+
+  <!-- Datos embebidos -->
+  <div id="data"
+       data-mensajes-clientes="{{ total_mensajes_clientes|default:0 }}"
+       data-mensajes-artistas="{{ total_mensajes_artistas|default:0 }}"
+       data-usuarios-clientes="{{ total_usuarios_clientes|default:0 }}"
+       data-usuarios-artistas="{{ total_usuarios_artistas|default:0 }}"
+       data-contratos-aceptados="{{ contratos_aceptados|default:0 }}"
+       data-contratos-rechazados="{{ contratos_rechazados|default:0 }}"
+       data-contratos-pendientes="{{ contratos_pendientes|default:0 }}">
+  </div>
+
+  <!-- Gráfico de Barras - Mensajes -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-6">
+      <div class="card shadow-sm rounded-3">
+        <div class="card-body">
+          <h5 class="text-center mb-3">Mensajes Enviados por Rol</h5>
+          <div style="height: 300px;">
+            <canvas id="graficoMensajes"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de Pastel - Usuarios -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-5">
+      <div class="card shadow-sm rounded-3">
+        <div class="card-body">
+          <h5 class="text-center mb-3">Usuarios Registrados</h5>
+          <div style="height: 300px;">
+            <canvas id="graficoUsuarios"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de Barras Apiladas - Estado de Contratos -->
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm rounded-3">
+        <div class="card-body">
+          <h5 class="text-center mb-3">Estado de Contratos</h5>
+          <div style="height: 350px;">
+            <canvas id="graficoContratos"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('graficoMensajes').getContext('2d');
-    const dataDiv = document.getElementById('data');
-    const totalClientes = parseInt(dataDiv.getAttribute('data-clientes')) || 0;
-    const totalArtistas = parseInt(dataDiv.getAttribute('data-artistas')) || 0;
+  const dataDiv = document.getElementById('data');
 
-    const data = {
-        labels: ['Clientes', 'Artistas'],
-        datasets: [{
-            label: 'Cantidad de Mensajes',
-            data: [totalClientes, totalArtistas],
-            backgroundColor: [
-                'rgba(255, 205, 86, 0.6)',
-                'rgba(54, 162, 235, 0.6)'
-            ],
-            borderColor: [
-                'rgba(255, 205, 86, 1)',
-                'rgba(54, 162, 235, 1)'
-            ],
-            borderWidth: 1
-        }]
-    };
+  const mensajesClientes = parseInt(dataDiv.getAttribute('data-mensajes-clientes')) || 0;
+  const mensajesArtistas = parseInt(dataDiv.getAttribute('data-mensajes-artistas')) || 0;
+  const usuariosClientes = parseInt(dataDiv.getAttribute('data-usuarios-clientes')) || 0;
+  const usuariosArtistas = parseInt(dataDiv.getAttribute('data-usuarios-artistas')) || 0;
 
-    const config = {
-        type: 'bar',
-        data: data,
-        options: {
-            scales: {
-                y: { beginAtZero: true }
-            }
+  const contratosAceptados = parseInt(dataDiv.getAttribute('data-contratos-aceptados')) || 0;
+  const contratosRechazados = parseInt(dataDiv.getAttribute('data-contratos-rechazados')) || 0;
+  const contratosPendientes = parseInt(dataDiv.getAttribute('data-contratos-pendientes')) || 0;
+
+  // Gráfico de Barras - Mensajes
+  new Chart(document.getElementById('graficoMensajes').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Clientes', 'Artistas'],
+      datasets: [{
+        label: 'Cantidad de Mensajes',
+        data: [mensajesClientes, mensajesArtistas],
+        backgroundColor: ['rgba(255, 205, 86, 0.7)', 'rgba(54, 162, 235, 0.7)'],
+        borderColor: ['rgba(255, 205, 86, 1)', 'rgba(54, 162, 235, 1)'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
         }
-    };
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
 
-    new Chart(ctx, config);
+  // Gráfico de Pastel - Usuarios
+  new Chart(document.getElementById('graficoUsuarios').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Clientes', 'Artistas'],
+      datasets: [{
+        data: [usuariosClientes, usuariosArtistas],
+        backgroundColor: ['rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)'],
+        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+
+  // Gráfico de Barras Apiladas - Estado de Contratos
+  new Chart(document.getElementById('graficoContratos').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Contratos'],
+      datasets: [
+        {
+          label: 'Aceptados',
+          data: [contratosAceptados],
+          backgroundColor: 'rgba(75, 192, 192, 0.7)'
+        },
+        {
+          label: 'Rechazados',
+          data: [contratosRechazados],
+          backgroundColor: 'rgba(255, 99, 132, 0.7)'
+        },
+        {
+          label: 'Pendientes',
+          data: [contratosPendientes],
+          backgroundColor: 'rgba(255, 205, 86, 0.7)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          beginAtZero: true,
+          stacked: true,
+          ticks: { stepSize: 1 }
+        }
+      },
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
 </script>
 {% endblock %}

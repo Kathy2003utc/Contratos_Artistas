@@ -2,54 +2,134 @@
 {% load static %}
 
 {% block contenido %}
-<br><br><br>
+<style>
+    body {
+        background: #f5f6fa;
+    }
 
-<body class="bg-light">
-    <div class="container mt-5">
+    .profile-card {
+        max-width: 600px;
+        margin: 100px auto;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        padding-top: 130px; /* espacio para la imagen */
+        padding-bottom: 30px;
+        /* overflow: hidden;  se puede quitar para que no recorte la imagen */
+    }
 
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Mi Perfil</h4>
-            </div>
-            <div class="card-body">
-                <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
-                <p><strong>Email:</strong> {{ usuario.email }}</p>
-                <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-                <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+    .profile-image-container {
+        position: absolute;
+        top: -75px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        border-radius: 50%;
+        padding: 5px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
 
-                <div class="mt-4 d-flex justify-content-between">
-                    <a href="{% url 'editar_perfil' %}" class="btn btn-warning">Editar</a>
-                    <button class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar</button>
-                </div>
-            </div>
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .btn-rounded {
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+
+    .btn-w-45 {
+        width: 48%;
+    }
+
+    .text-muted {
+        font-size: 14px;
+        color: #6c757d !important;
+    }
+</style>
+
+<div class="container text-center">
+    <div class="profile-card">
+
+        <!-- Foto perfil -->
+        <div class="profile-image-container">
+            {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil" class="profile-image">
+            {% else %}
+                <img src="{% static 'default-profile.png' %}" alt="Foto por defecto" class="profile-image">
+            {% endif %}
+        </div>
+
+        <!-- Info básica -->
+        <h4 class="mt-3">{{ usuario.first_name }} {{ usuario.last_name }}</h4>
+        <p class="text-muted mb-1">{{ usuario.email }}</p>
+
+        <!-- Info detallada -->
+        <div class="text-start px-4 mt-4">
+            <p><strong>📞 Teléfono:</strong> {{ usuario.telefono }}</p>
+            <p><strong>🏠 Dirección:</strong> {{ usuario.direccion }}</p>
+
+            {% if usuario.portafolio_pdf %}
+                <p><strong>📄 Portafolio:</strong>
+                    <a href="{{ usuario.portafolio_pdf.url }}" target="_blank" class="text-primary">Descargar PDF</a>
+                </p>
+            {% endif %}
+
+            <h5 class="mt-4">🔗 Redes Sociales</h5>
+
+            {% if usuario.facebook_url %}
+                <p><strong>Facebook:</strong> 
+                    <a href="{{ usuario.facebook_url }}" target="_blank">{{ usuario.facebook_url }}</a>
+                </p>
+            {% endif %}
+            {% if usuario.x_url %}
+                <p><strong>X (Twitter):</strong> 
+                    <a href="{{ usuario.x_url }}" target="_blank">{{ usuario.x_url }}</a>
+                </p>
+            {% endif %}
+            {% if usuario.web_url %}
+                <p><strong>Página Web:</strong> 
+                    <a href="{{ usuario.web_url }}" target="_blank">{{ usuario.web_url }}</a>
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-between mt-4 px-4">
+            <a href="{% url 'editar_perfil' %}" class="btn btn-warning btn-rounded btn-w-45">Editar Perfil</a>
+            <button class="btn btn-danger btn-rounded btn-w-45" onclick="confirmarEliminacion()">Eliminar Perfil</button>
         </div>
     </div>
+</div>
 
-    <script>
-        function confirmarEliminacion() {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: '¡Esta acción eliminará tu perfil permanentemente!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = "{% url 'eliminar_perfil' %}";
-                    const csrfToken = "{{ csrf_token }}";
-                    form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">`;
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
+<script>
+function confirmarEliminacion() {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡Esta acción eliminará tu perfil permanentemente!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'eliminar_perfil' %}";
+            form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">`;
+            document.body.appendChild(form);
+            form.submit();
         }
-    </script>
-</body>
+    });
+}
+</script>
 
 <br><br><br>
 {% endblock %}

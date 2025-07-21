@@ -11,6 +11,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from Aplicaciones.gestionContratos.models import Usuario, Mensaje, Reseña
 
+
 # ------------------------ LOGIN ------------------------
 
 def login(request):
@@ -164,7 +165,6 @@ def registrarUsuario(request):
 
     return render(request, 'login/registrarUsuario.html')
 
-from .models import VerificacionCorreo
 
 def verificarCorreo(request, usuario_id):
     usuario = Usuario.objects.get(id=usuario_id)
@@ -244,12 +244,19 @@ def dashboard_administrador(request):
         messages.error(request, "No tienes permisos para acceder al panel de administrador.")
         return redirect('login')
 
+    # Conteos para mostrar datos reales
+    total_usuarios = Usuario.objects.count()
+    total_eventos = Evento.objects.count()
+    total_contratos = Contrato.objects.count()
+
     contexto = {
         'usuario': usuario,
-        'mensaje': 'Bienvenido al panel del administrador'
+        'mensaje': 'Bienvenido al panel del administrador',
+        'total_usuarios': total_usuarios,
+        'total_eventos': total_eventos,
+        'total_contratos': total_contratos,
     }
     return render(request, 'administrador/dashboard.html', contexto)
-
 
 def ver_perfil(request):
     usuario_id = request.session.get('usuario_id')
@@ -1303,12 +1310,26 @@ def resumen_mensajes_admin(request):
         messages.error(request, "No tienes permisos para esta sección.")
         return redirect('login')
 
-    # Usar emisor__rol en lugar de remitente__rol
-    total_clientes = Mensaje.objects.filter(emisor__rol='Cliente').count()
-    total_artistas = Mensaje.objects.filter(emisor__rol='Artista').count()
+    # Cantidad de mensajes enviados por clientes y artistas
+    total_mensajes_clientes = Mensaje.objects.filter(emisor__rol='Cliente').count()
+    total_mensajes_artistas = Mensaje.objects.filter(emisor__rol='Artista').count()
+
+    # Total de usuarios registrados por rol
+    total_usuarios_clientes = Usuario.objects.filter(rol='Cliente').count()
+    total_usuarios_artistas = Usuario.objects.filter(rol='Artista').count()
+
+    # Conteo de contratos por estado
+    contratos_aceptados = Contrato.objects.filter(estado='Aceptado').count()
+    contratos_rechazados = Contrato.objects.filter(estado='Rechazado').count()
+    contratos_pendientes = Contrato.objects.filter(estado='Pendiente').count()
 
     return render(request, 'administrador/presentacion/resumen_mensajes.html', {
         'usuario': admin,
-        'total_clientes': total_clientes,
-        'total_artistas': total_artistas,
+        'total_mensajes_clientes': total_mensajes_clientes,
+        'total_mensajes_artistas': total_mensajes_artistas,
+        'total_usuarios_clientes': total_usuarios_clientes,
+        'total_usuarios_artistas': total_usuarios_artistas,
+        'contratos_aceptados': contratos_aceptados,
+        'contratos_rechazados': contratos_rechazados,
+        'contratos_pendientes': contratos_pendientes,
     })
