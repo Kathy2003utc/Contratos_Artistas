@@ -969,12 +969,6 @@ def listar_contratos_administrador(request):
 
 # ------------------------ MENSAJES ------------------------
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.utils import timezone
-from Aplicaciones.gestionContratos.models import Usuario, Mensaje
-
-
 # --- ADMINISTRADOR ---
 
 def listar_mensajes_admin(request):
