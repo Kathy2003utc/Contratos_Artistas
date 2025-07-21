@@ -9,8 +9,7 @@ from django.conf import settings
 from django.utils import timezone
 import json
 from django.contrib.auth.decorators import login_required
-from Aplicaciones.gestionContratos.models import Usuario, Mensaje
-
+from Aplicaciones.gestionContratos.models import Usuario, Mensaje, Reseña
 
 # ------------------------ LOGIN ------------------------
 
@@ -968,7 +967,7 @@ def listar_contratos_administrador(request):
     })
 
 
-# ---- Mensajes ----
+# ------------------------ MENSAJES ------------------------
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -1115,13 +1114,7 @@ def eliminar_mensaje_usuario(request, id):
         return redirect('artista_listar_mensajes')
     
 
-# --- Reseñas ---
-
-# Importa tu modelo Reseña y Usuario
-from Aplicaciones.gestionContratos.models import Usuario, Reseña
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-
+# ------------------------ RESEÑAS ------------------------
 
 # --- ADMINISTRADOR ---
 def listar_resenas_admin(request):
