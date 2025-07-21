@@ -5,7 +5,7 @@
 <br><br><br>
 
 <div class="container mt-5">
-    <h1 class="text-center text-primary">Mis Contratos</h1>
+    <h1 class="text-center text-primary">Mis Pagos Contratos</h1>
     <hr>
 
     <div class="table-responsive">
@@ -62,13 +62,12 @@
                     {% endif %}
                 </td>
                 <td>
-                {% if contrato.observaciones %}
-                    {{ contrato.observaciones }}
-                {% else %}
-                    <span class="text-muted">Sin observaciones</span>
-                {% endif %}
-            </td>
-
+                    {% if contrato.observaciones %}
+                        {{ contrato.observaciones }}
+                    {% else %}
+                        <span class="text-muted">Sin observaciones</span>
+                    {% endif %}
+                </td>
                 <td>
                     {% if contrato.estado == 'Pendiente' %}
                     <form method="post" action="{% url 'accion_contrato_artista' contrato.id %}" style="display: inline;">
@@ -87,6 +86,10 @@
                         </a>
                     {% endif %}
                 </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" class="text-center">No tienes contratos asignados aún.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -131,12 +134,10 @@ document.querySelectorAll('form').forEach(form => {
   $('#tbl_contrato').DataTable({
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-
       language: {
           url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
       }
   });
-
 </script>
 
 <br><br><br>
