@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
+     # ------------------------ URLS del apartado de LOGIN ------------------------
+
     # Autenticación
     path('', views.login, name='login'),
     path('login/', views.login, name='login'),
@@ -21,6 +24,9 @@ urlpatterns = [
     path('administrador/', views.dashboard_administrador, name='dashboard_administrador'),
     path('cliente/dashboard/', views.dashboard_cliente, name='dashboard_cliente'),
     path('artista/dashboard/', views.dashboard_artista, name='dashboard_artista'),
+
+
+     # ------------------------ URLS del apartado de CLIENTES y ARTISTAS ------------------------
 
     # Perfil
     path('perfil/', views.ver_perfil, name='ver_perfil'),
@@ -88,7 +94,6 @@ urlpatterns = [
     path('administrador/contratos/', views.listar_contratos_administrador, name='listar_contratos_administrador'),
 
 
-    
 
     # ------------------------ URLS del apartado de MENSAJES ------------------------
 
@@ -126,7 +131,7 @@ urlpatterns = [
     path('artista/resenas/', views.listar_resenas_usuario, name='artista_listar_resenas'),
 
 
-
+    # ------------------------ URLS del apartado de CHARTJS PARA VER MENSAJES ------------------------
 
     path('administrador/presentacion/resumen/', views.resumen_mensajes_admin, name='resumen_mensajes_admin'),
 
