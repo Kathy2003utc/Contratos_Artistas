@@ -7,7 +7,7 @@
     <h1 class="text-center text-primary mb-4">Editar Reseña</h1>
     <p class="text-center">Usuario: {{ usuario.username }} ({{ usuario.rol }})</p>
 
-    <form action="" method="post" class="mx-auto" style="max-width: 600px;">
+    <form id="frm_editar_resena" action="" method="post" class="mx-auto" style="max-width: 600px;">
         {% csrf_token %}
         
         <div class="mb-3">
@@ -16,12 +16,12 @@
 
         <div class="mb-3">
             <label for="texto" class="form-label">Texto:</label>
-            <textarea name="texto" id="texto" rows="4" class="form-control" required>{{ resena.texto }}</textarea>
+            <textarea name="texto" id="texto" rows="4" class="form-control">{{ resena.texto }}</textarea>
         </div>
 
         <div class="mb-3">
             <label for="puntuacion" class="form-label">Puntuación (1-5):</label>
-            <input type="number" name="puntuacion" id="puntuacion" min="1" max="5" value="{{ resena.puntuacion }}" class="form-control" required>
+            <input type="number" name="puntuacion" id="puntuacion" min="1" max="5" value="{{ resena.puntuacion }}" class="form-control">
         </div>
 
         <div class="text-center">
@@ -32,4 +32,36 @@
 </div>
 
 <br><br><br>
+
+<script>
+$("#frm_editar_resena").validate({
+    rules: {
+        texto: {
+            required: true,
+            minlength: 5,
+            maxlength: 1000
+        },
+        puntuacion: {
+            required: true,
+            number: true,
+            min: 1,
+            max: 5
+        }
+    },
+    messages: {
+        texto: {
+            required: "Por favor escribe una reseña",
+            minlength: "La reseña debe tener al menos 5 caracteres",
+            maxlength: "La reseña no puede exceder 1000 caracteres"
+        },
+        puntuacion: {
+            required: "Por favor ingresa una puntuación",
+            number: "Debe ser un número válido",
+            min: "La puntuación mínima es 1",
+            max: "La puntuación máxima es 5"
+        }
+    },
+});
+</script>
+
 {% endblock %}
