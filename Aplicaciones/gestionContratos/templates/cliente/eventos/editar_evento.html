@@ -6,29 +6,29 @@
     <h1 class="text-center text-primary">Editar Evento</h1>
     <hr>
 
-    <form method="post" class="mx-auto" style="max-width: 600px;">
+    <form id="frm_editar_evento" method="post" class="mx-auto" style="max-width: 600px;">
         {% csrf_token %}
 
         <div class="mb-3">
             <label for="titulo" class="form-label">Título del evento:</label>
-            <input type="text" id="titulo" name="titulo" class="form-control" required
+            <input type="text" id="titulo" name="titulo" class="form-control" 
                    value="{{ evento.titulo }}" />
         </div>
 
         <div class="mb-3">
             <label for="descripcion" class="form-label">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required>{{ evento.descripcion }}</textarea>
+            <textarea id="descripcion" name="descripcion" class="form-control" rows="4">{{ evento.descripcion }}</textarea>
         </div>
 
         <div class="mb-3">
             <label for="fecha" class="form-label">Fecha:</label>
-            <input type="date" id="fecha" name="fecha" class="form-control" required
+            <input type="date" id="fecha" name="fecha" class="form-control" 
                    value="{{ evento.fecha|date:'Y-m-d' }}" />
         </div>
 
         <div class="mb-3">
             <label for="ubicacion" class="form-label">Ubicación:</label>
-            <input type="text" id="ubicacion" name="ubicacion" class="form-control" required
+            <input type="text" id="ubicacion" name="ubicacion" class="form-control" 
                    value="{{ evento.ubicacion }}" />
         </div>
 
@@ -37,5 +37,49 @@
     </form>
 </div>
 
-{% endblock %}
+<script>
+    $("#frm_editar_evento").validate({
+        rules: {
+            titulo: {
+                required: true,
+                minlength: 3,
+                maxlength: 100
+            },
+            descripcion: {
+                required: true,
+                minlength: 10
+            },
+            fecha: {
+                required: true,
+                date: true
+            },
+            ubicacion: {
+                required: true,
+                minlength: 3,
+                maxlength: 150
+            }
+        },
+        messages: {
+            titulo: {
+                required: "Por favor ingrese el título del evento",
+                minlength: "El título debe tener al menos 3 caracteres",
+                maxlength: "El título no puede exceder 100 caracteres"
+            },
+            descripcion: {
+                required: "Por favor ingrese una descripción",
+                minlength: "La descripción debe tener al menos 10 caracteres"
+            },
+            fecha: {
+                required: "Por favor seleccione la fecha",
+                date: "Ingrese una fecha válida"
+            },
+            ubicacion: {
+                required: "Por favor ingrese la ubicación",
+                minlength: "La ubicación debe tener al menos 3 caracteres",
+                maxlength: "La ubicación no puede exceder 150 caracteres"
+            }
+        },
+    });
+</script>
 
+{% endblock %}
