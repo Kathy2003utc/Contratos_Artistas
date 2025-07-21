@@ -6,7 +6,7 @@
     <h1 class="text-center text-primary">Crear Contrato</h1>
     <hr>
 
-    <form method="post" class="mx-auto" style="max-width: 600px;" enctype="multipart/form-data">
+    <form id="frm_nuevo_contrato" method="post" class="mx-auto" style="max-width: 600px;" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="mb-3">
@@ -43,7 +43,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="pdf_certificado_sanitario">Contrato en PDF</label>
+            <label for="pdf" class="form-label">Contrato en PDF</label>
             <input type="file" name="pdf" id="pdf" class="form-control">
         </div>
 
@@ -59,8 +59,6 @@
     </form>
 </div>
 
-
-<!-- Mostrar opciones de Aceptar o Rechazar solo si el artista está autenticado y es el asignado -->
 {% if contrato and user.id == contrato.artista.id and contrato.estado == 'Pendiente' %}
 <div class="container mt-4 text-center">
     <h4>Este contrato está pendiente. ¿Deseas aceptarlo o rechazarlo?</h4>
@@ -77,7 +75,6 @@
 </div>
 {% endif %}
 
-<!-- Mostrar estado actual del contrato -->
 {% if contrato %}
 <div class="container mt-4">
     <h5>Estado actual del contrato: 
@@ -99,6 +96,66 @@
         showCaption: false,
         dropZoneEnabled: true,
         showClose: false
+    });
+
+    $("#frm_nuevo_contrato").validate({
+        rules: {
+            "evento": {
+                required: true
+            },
+            "artista": {
+                required: true
+            },
+            "fecha_inicio": {
+                required: true,
+                date: true
+            },
+            "fecha_fin": {
+                required: true,
+                date: true
+            },
+            "costo": {
+                required: true,
+                number: true,
+                min: 0
+            },
+            "pdf": {
+                required: true,
+                extension: "pdf"
+            },
+            "observaciones": {
+                required: false,
+                maxlength: 500
+            }
+        },
+        messages: {
+            "evento": {
+                required: "Seleccione un evento"
+            },
+            "artista": {
+                required: "Seleccione un artista"
+            },
+            "fecha_inicio": {
+                required: "Seleccione una fecha de inicio",
+                date: "Ingrese una fecha válida"
+            },
+            "fecha_fin": {
+                required: "Seleccione una fecha de fin",
+                date: "Ingrese una fecha válida"
+            },
+            "costo": {
+                required: "Ingrese el costo",
+                number: "Ingrese un número válido",
+                min: "El costo no puede ser negativo"
+            },
+            "pdf": {
+                required: "Debe subir un archivo PDF",
+                extension: "Solo se permite formato PDF"
+            },
+            "observaciones": {
+                maxlength: "Máximo 500 caracteres"
+            }
+        }
     });
 </script>
 
