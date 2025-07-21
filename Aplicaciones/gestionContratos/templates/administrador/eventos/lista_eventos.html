@@ -4,13 +4,13 @@
 {% block contenido %}
 <br><br><br>
 
-<div class="container mt-4">
-  <h2 class="text-center text-primary">Eventos Registrados por Clientes</h2>
+<div class="container mt-5">
+  <h1 class="text-center text-primary">Eventos Registrados por Clientes</h1>
   <hr>
 
   {% if eventos %}
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
+    <table class="table table-bordered table-striped table-hover" id="tbl_eventos">
+      <thead class="table-primary">
         <tr>
           <th>Título</th>
           <th>Cliente</th>
@@ -24,9 +24,9 @@
         <tr>
           <td>{{ evento.titulo }}</td>
           <td>{{ evento.cliente.first_name }} {{ evento.cliente.last_name }}</td>
-          <td>{{ evento.fecha }}</td>
+          <td>{{ evento.fecha|date:"d/m/Y" }}</td>
           <td>{{ evento.ubicacion }}</td>
-          <td>{{ evento.descripcion }}</td>
+          <td>{{ evento.descripcion|default:"—" }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -35,6 +35,17 @@
     <p class="text-muted text-center">No hay eventos registrados.</p>
   {% endif %}
 </div>
+
+<!-- DataTables JS + configuración -->
+<script>
+  $('#tbl_eventos').DataTable({
+    dom: 'Bfrtip',
+    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    language: {
+      url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+    }
+  });
+</script>
 
 <br><br><br>
 {% endblock %}
