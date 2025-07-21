@@ -11,7 +11,6 @@ Brlapi==0.8.6
 cffi==1.17.1
 charset-normalizer==3.4.1
 click==8.1.7
-cockpit @ file:///builddir/build/BUILD/cockpit-342-build/cockpit-342/tmp/wheel/cockpit-342-py3-none-any.whl#sha256=6f64bfb88fbe8d07b4653909b6f8164fb8981b01c2200655a733387fac9c872c
 crypt_r==3.13.1
 cryptography==44.0.0
 cupshelpers==1.0
