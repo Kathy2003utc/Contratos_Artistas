@@ -9,6 +9,10 @@ from django.conf import settings
 from django.utils import timezone
 import json
 from django.contrib.auth.decorators import login_required
+from Aplicaciones.gestionContratos.models import Usuario, Mensaje
+
+
+# ------------------------ LOGIN ------------------------
 
 def login(request):
     return render(request, "login/login.html")
@@ -302,6 +306,9 @@ def eliminar_perfil(request):
         return redirect('login')
 
     return render(request, f"{usuario.rol.lower()}/eliminar_perfil.html", {'usuario': usuario})
+
+
+# ------------------------ LISTA DE EVENTOS EN CLIENTES ------------------------
 
 # Listar eventos del cliente actual
 def listar_eventos(request):
@@ -1297,11 +1304,7 @@ def eliminar_resena_usuario(request, id):
         return redirect('artista_listar_resenas')
 
 
-
-
-from Aplicaciones.gestionContratos.models import Usuario, Mensaje
-from django.shortcuts import render, redirect
-from django.contrib import messages
+# ------------------------ DASHBOARD ------------------------
 
 def resumen_mensajes_admin(request):
     usuario_id = request.session.get('usuario_id')
