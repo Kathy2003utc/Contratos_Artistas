@@ -4,7 +4,7 @@
 <div class="container mt-5">
   <h3 class="mb-4">Nuevo Mensaje</h3>
 
-  <form method="post">
+  <form id="frm_nuevo_mensaje" method="post">
     {% csrf_token %}
 
     <div class="mb-3">
@@ -15,12 +15,31 @@
 
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>
-      <textarea name="texto" id="texto" class="form-control" rows="4" required></textarea>
+      <textarea name="texto" id="texto" class="form-control" rows="4"></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar</button>
     <a href="{% url 'cliente_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>
+
+<script>
+  $("#frm_nuevo_mensaje").validate({
+    rules: {
+      texto: {
+        required: true,
+        minlength: 5,
+        maxlength: 1000
+      }
+    },
+    messages: {
+      texto: {
+        required: "Por favor, escribe un mensaje",
+        minlength: "El mensaje debe tener al menos 5 caracteres",
+        maxlength: "El mensaje no puede exceder 1000 caracteres"
+      }
+    },
+  });
+</script>
 
 {% endblock %}

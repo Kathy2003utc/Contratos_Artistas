@@ -4,7 +4,7 @@
 <div class="container mt-5">
   <h3 class="mb-4">Editar Mensaje</h3>
 
-  <form method="post">
+  <form id="frm_editar_mensaje" method="post">
     {% csrf_token %}
     <div class="mb-3">
         <label for="receptor" class="form-label">Receptor:</label>
@@ -12,15 +12,33 @@
         <input type="hidden" name="receptor" value="{{ mensaje.receptor.id }}">
     </div>
 
-
     <div class="mb-3">
       <label for="texto" class="form-label">Mensaje:</label>
-      <textarea name="texto" id="texto" class="form-control" rows="4" required>{{ mensaje.texto }}</textarea>
+      <textarea name="texto" id="texto" class="form-control" rows="4">{{ mensaje.texto }}</textarea>
     </div>
 
     <button type="submit" class="btn btn-warning">Actualizar</button>
     <a href="{% url 'cliente_listar_mensajes' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>
+
+<script>
+  $("#frm_editar_mensaje").validate({
+    rules: {
+      texto: {
+        required: true,
+        minlength: 5,
+        maxlength: 1000
+      }
+    },
+    messages: {
+      texto: {
+        required: "Por favor, escribe un mensaje",
+        minlength: "El mensaje debe tener al menos 5 caracteres",
+        maxlength: "El mensaje no puede exceder 1000 caracteres"
+      }
+    },
+  });
+</script>
 
 {% endblock %}
