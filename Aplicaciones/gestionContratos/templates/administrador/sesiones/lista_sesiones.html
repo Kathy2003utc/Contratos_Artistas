@@ -3,11 +3,14 @@
 
 {% block contenido %}
 <div class="container mt-5">
-    <h2 class="mb-4 text-center text-success">Registro de Sesiones</h2>
     <hr>
+    <hr>
+    
+    <h2 class="mb-4 text-center text-success">Registro de Sesiones</h2>
+   
 
     <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
+        <table class="table table-bordered table-striped table-hover" id="tbl_registros">
             <thead class="table-success">
                 <tr>
                     <th>#</th>
@@ -59,4 +62,14 @@
         </table>
     </div>
 </div>
+
+<script>
+  $('#tbl_registros').DataTable({
+    dom: 'Bfrtip',
+    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    language: {
+      url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+    }
+  });
+</script>
 {% endblock %}
